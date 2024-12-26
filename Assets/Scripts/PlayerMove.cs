@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -7,7 +8,7 @@ public class PlayerMove : MonoBehaviour
     
     // Velocidad de movimiento del jugador
     [SerializeField] private float speed = 5.0f;
-    private bool isMoving = false;
+    private bool _isMoving = false;
 
     private RotateBone[] _bones;
 
@@ -15,17 +16,25 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float detectionDistance = 1.0f;
     // Capa de los objetos que deben ser detectados
     [SerializeField] private LayerMask obstacleLayer;
-
     
+    public bool block = false;
     
     private void Start()
     {
-        _bones = GetComponentsInChildren<RotateBone>();
+        _bones = GetComponentsInChildren<RotateBone>()
+            .Where(bone => !bone.IsAttack) // Filtra los que no son isAttack
+            .ToArray();
+        
         SetSpeed(0.25f);
     }
 
     void Update()
     {
+        if (block)
+        {
+            return;
+        }
+        
         // Obtener entrada del teclado (WASD o flechas del teclado)
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
         float moveVertical = Input.GetAxisRaw("Vertical");
@@ -49,14 +58,14 @@ public class PlayerMove : MonoBehaviour
         if (!IsColliderInFront())
         {
             // Si no hay un collider, mover al jugador
-            if (movement != Vector3.zero && !isMoving)
+            if (movement != Vector3.zero && !_isMoving)
             {
-                isMoving = true;
+                _isMoving = true;
                 SetSpeed(1);
             }
-            else if (movement == Vector3.zero && isMoving)
+            else if (movement == Vector3.zero && _isMoving)
             {
-                isMoving = false;
+                _isMoving = false;
                 SetSpeed(0.25f);
             }
 
@@ -73,7 +82,7 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private bool IsColliderInFront()
+    public bool IsColliderInFront()
     {
         // Lanzamos un Raycast en la dirección en la que el jugador está mirando
         RaycastHit hit;
