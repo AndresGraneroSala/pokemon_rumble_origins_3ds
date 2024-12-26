@@ -23,6 +23,8 @@ public class Opponent : MonoBehaviour {
     private float _distanceToPlayer=0;
 
     private bool _isAttacking;
+    private float _upChecker = 0.1f;
+
 	// Use this for initialization
 	void Start () {
 		target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -45,29 +47,45 @@ public class Opponent : MonoBehaviour {
 			return;
 		}
 
-		if (agent.pathPending || agent.remainingDistance == Mathf.Infinity || agent.remainingDistance <= 0.0f)
+		if (agent.pathPending || agent.remainingDistance == Mathf.Infinity || agent.remainingDistance <= 0.0f|| agent.isStopped)
 		{
 			_distanceToPlayer = Vector3.Distance(transform.position, target.position);
+
+			if (!agent.isStopped)
+			{
+				ChangeSpeedBones(0);
+			}
+			
 			agent.isStopped = true;
-			ChangeSpeedBones(0);
 
 		}
 		else
 		{
-			agent.isStopped = false;
-
 			// Muestra la distancia restante en la consola.
 			_distanceToPlayer = agent.remainingDistance;
 		}
 
-		agent.SetDestination(target.position);
-
-		if (_distanceToPlayer <= distanceToMove)
+		if (_distanceToPlayer <= distanceToMove) 
 		{
-			if (_distanceToPlayer <= distanceToAttack)
+			if (_distanceToPlayer <= distanceToAttack) 
 			{
+				// Detenemos al agente cuando está dentro del rango de ataque
+				agent.isStopped = true;
+        
+				// Ejecutamos la animación o lógica de ataque
 				StartCoroutine(PlayAttack(attack));
 			}
+			else
+			{
+				// Si está dentro del rango de persecución pero no de ataque, el agente sigue persiguiendo
+				agent.isStopped = false;
+				agent.SetDestination(target.position);
+			}
+		}
+		else
+		{
+			// Si el jugador se aleja del rango de persecución, detenemos al agente
+			agent.isStopped = true;
 		}
 	}
 
@@ -121,8 +139,6 @@ public class Opponent : MonoBehaviour {
 	
 	private IEnumerator MoveCoroutine(float distance, float speed)
 	{
-		//todo: check collision
-
 		Vector3 startPosition = transform.position; // Posición inicial del objeto
 		Vector3 targetPosition = startPosition + transform.forward * distance; // Posición objetivo
 
@@ -131,6 +147,10 @@ public class Opponent : MonoBehaviour {
 
 		while (elapsedTime < journeyLength / speed)
 		{
+			if (IsColliderInFront())
+			{
+				break;
+			}
 			
 			// Interpolar la posición
 			transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime * speed) / journeyLength);
@@ -139,8 +159,46 @@ public class Opponent : MonoBehaviour {
 		}
 
 		// Asegurarse de llegar a la posición final
-		transform.position = targetPosition;
+		//transform.position = targetPosition;
 		
+	}
+	
+	
+	// Distancia a la que se detectará el collider frente al jugador
+	[SerializeField] private float detectionDistance = 1.0f;
+	// Capa de los objetos que deben ser detectados
+	[SerializeField] private LayerMask obstacleLayer;
+	public bool IsColliderInFront()
+	{
+		// Lanzamos un Raycast en la dirección en la que el jugador está mirando
+		RaycastHit hit;
+		Vector3 forwardDirection = transform.TransformDirection(Vector3.forward);
+
+		// Verifica si hay un objeto en frente del jugador (no se dibuja aquí)
+		if (Physics.Raycast(transform.position+ new Vector3(0,_upChecker,0), forwardDirection, out hit, detectionDistance, obstacleLayer))
+		{
+			// Si el objeto tiene un Collider 3D que no es Trigger, no moveremos al jugador
+			if (hit.collider != null && !hit.collider.isTrigger)
+			{
+				return true; // Hay un collider no trigger delante
+			}
+		}
+		return false; // No hay ningún collider no trigger delante
+	}	
+	
+	private void OnDrawGizmos()
+	{
+		// Asegúrate de que el objeto está seleccionado y activado
+		if (enabled)
+		{
+			// Configuramos el color del Gizmo
+			Gizmos.color = Color.blue;
+
+			// Dirección en la que se lanza el raycast
+			Vector3 forwardDirection = transform.TransformDirection(Vector3.forward);
+			// Dibujamos el Gizmo en el editor (un rayo)
+			Gizmos.DrawRay(transform.position+ new Vector3(0,_upChecker,0), forwardDirection * detectionDistance);
+		}
 	}
 	
 	private IEnumerator RotateTowardsCoroutine()

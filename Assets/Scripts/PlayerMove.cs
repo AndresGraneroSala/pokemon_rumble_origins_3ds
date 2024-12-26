@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float detectionDistance = 1.0f;
     // Capa de los objetos que deben ser detectados
     [SerializeField] private LayerMask obstacleLayer;
-    
+    private float _upChecker = 0.1f;
     public bool block = false;
     
     private void Start()
@@ -89,7 +89,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 forwardDirection = model.TransformDirection(Vector3.forward);
 
         // Verifica si hay un objeto en frente del jugador (no se dibuja aquí)
-        if (Physics.Raycast(model.position, forwardDirection, out hit, detectionDistance, obstacleLayer))
+        if (Physics.Raycast(model.position+new Vector3(0,_upChecker,0), forwardDirection, out hit, detectionDistance, obstacleLayer))
         {
             // Si el objeto tiene un Collider 3D que no es Trigger, no moveremos al jugador
             if (hit.collider != null && !hit.collider.isTrigger)
@@ -121,7 +121,7 @@ public class PlayerMove : MonoBehaviour
             Vector3 forwardDirection = model.TransformDirection(Vector3.forward);
 
             // Dibujamos el Gizmo en el editor (un rayo)
-            Gizmos.DrawRay(model.position, forwardDirection * detectionDistance);
+            Gizmos.DrawRay(model.position+ new Vector3(0,_upChecker,0), forwardDirection * detectionDistance);
         }
     }
 }

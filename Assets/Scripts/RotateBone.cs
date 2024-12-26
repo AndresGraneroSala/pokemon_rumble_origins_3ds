@@ -51,7 +51,11 @@ public class RotateBone : MonoBehaviour
         {
             return;
         }
-        
+
+        if (speedState<=0)
+        {
+            return;
+        }
         
         // Calcula el cambio de rotación para este frame
         Vector3 deltaRotation = rotationDirection * (rotationSpeed * Time.deltaTime * speedState);
