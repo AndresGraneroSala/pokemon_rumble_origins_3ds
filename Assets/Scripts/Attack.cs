@@ -26,7 +26,8 @@ public class Attack
 		Dark,
 		Steel,
 		Fairy,
-		Stellar
+		Stellar,
+		None
 	}
 
 	[SerializeField] private TypeAttack type;
@@ -101,6 +102,11 @@ public class Attack
 
 	public static float GetMultiplicatorType(TypeAttack attack, TypeAttack defend)
 	{
+		if (attack== TypeAttack.Stellar|| defend== TypeAttack.Stellar)
+		{
+			return 1;
+		}
+		
 		switch (defend)
 		{
 			case TypeAttack.Normal:

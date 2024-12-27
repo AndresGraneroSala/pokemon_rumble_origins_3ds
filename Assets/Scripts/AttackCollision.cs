@@ -7,32 +7,47 @@ public class AttackCollision : MonoBehaviour
 {
 
 	private float _damage=0;
-	[HideInInspector] public bool isPlayer=true;
+	private bool _isPlayer=true;
 
 	private List<GameObject> enemiesAttacked;
 
+	private Attack.TypeAttack _typeAttack;
+	
 	private void Start()
 	{
 		enemiesAttacked = new List<GameObject>();
 	}
 
-	public void SetDamage(float damage)
+	public void SetDamage(float damage, Attack.TypeAttack type, bool isPlayer)
 	{
+		_isPlayer = isPlayer;
+		_typeAttack=type;
+		
 		_damage = damage;
 	}
 	
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag("Enemy") && isPlayer)
+		if (other.CompareTag("Enemy") && _isPlayer)
 		{
 			if (!enemiesAttacked.Contains(other.gameObject))
 			{
+				Opponent opponent = other.GetComponent<Opponent>();
+				float multiplier = Attack.GetMultiplicatorType(_typeAttack,opponent.TypePokemon1);
+
+				if (opponent.TypePokemon2!=Attack.TypeAttack.None)
+				{
+					multiplier+= Attack.GetMultiplicatorType(_typeAttack,opponent.TypePokemon2);
+					multiplier /= 2;
+				}
+				
+				
 				enemiesAttacked.Add(other.gameObject);
-				other.GetComponent<LifeDestroy>().Damage(_damage);
+				other.GetComponent<LifeDestroy>().Damage(_damage,multiplier);
 			}
 		}
 		
-		if (other.CompareTag("Player") && isPlayer)
+		if (other.CompareTag("Player") && _isPlayer)
 		{
 			return;
 		}

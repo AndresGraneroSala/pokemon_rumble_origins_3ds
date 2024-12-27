@@ -73,8 +73,8 @@ public class PlayerAttack : MonoBehaviour
 			AttackCollision [] damages= bullet.GetComponentsInChildren<AttackCollision>();
 			foreach (var damage in damages)
 			{
-				damage.SetDamage(attack.Damage);
-				damage.isPlayer = true;
+				
+				damage.SetDamage(attack.Damage, attack.Type,true);
 			}
 			
 			

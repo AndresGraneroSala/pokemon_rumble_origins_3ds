@@ -25,7 +25,20 @@ public class Opponent : MonoBehaviour {
     private bool _isAttacking;
     private float _upChecker = 0.1f;
 
-	// Use this for initialization
+    [SerializeField] private Attack.TypeAttack typePokemon1;
+
+    public Attack.TypeAttack TypePokemon1
+    {
+	    get { return typePokemon1; }
+    }
+    [SerializeField] private Attack.TypeAttack typePokemon2;
+
+    public Attack.TypeAttack TypePokemon2
+    {
+	    get { return typePokemon2; }
+    }
+
+    // Use this for initialization
 	void Start () {
 		target = GameObject.FindGameObjectWithTag("Player").transform;
 		agent.stoppingDistance = distanceToAttack;
@@ -120,8 +133,8 @@ public class Opponent : MonoBehaviour {
 			AttackCollision [] damages= bullet.GetComponentsInChildren<AttackCollision>();
 			foreach (var damage in damages)
 			{
-				damage.SetDamage(attack.Damage);
-				damage.isPlayer = false;
+				damage.SetDamage(attack.Damage, attack.Type,false);
+				
 			}
 			
 			
