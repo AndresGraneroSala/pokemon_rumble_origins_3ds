@@ -35,11 +35,13 @@ public class AttackCollision : MonoBehaviour
 				Opponent opponent = other.GetComponent<Opponent>();
 				float multiplier = Attack.GetMultiplicatorType(_typeAttack,opponent.TypePokemon1);
 
-				if (opponent.TypePokemon2!=Attack.TypeAttack.None)
+
+				if (_typeAttack!=Attack.TypeAttack.None)
 				{
-					multiplier+= Attack.GetMultiplicatorType(_typeAttack,opponent.TypePokemon2);
-					multiplier /= 2;
+					multiplier *= Attack.GetMultiplicatorType(_typeAttack,opponent.TypePokemon2);
 				}
+				
+
 				
 				
 				enemiesAttacked.Add(other.gameObject);

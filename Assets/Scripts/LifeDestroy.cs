@@ -23,9 +23,17 @@ public class LifeDestroy : MonoBehaviour
 
 		string messsage="";
 
-		if (multiplier >= 0.0f && multiplier < 1.0f)
+		if (multiplier >= 0.0f && multiplier < 0.25f)
 		{
-			messsage = "Inmune ";
+			messsage = "Muy poco efectivo";
+		}
+		else if (multiplier >= 0.25f && multiplier < 0.5f)
+		{
+			messsage = "Poco efectivo";
+		}
+		else if (multiplier >= 0.5f && multiplier < 1.0f)
+		{
+			messsage = "Inmune";
 		}
 		else if (multiplier >= 1.0f && multiplier < 1.5f)
 		{
@@ -33,14 +41,13 @@ public class LifeDestroy : MonoBehaviour
 		}
 		else if (multiplier >= 1.5f && multiplier < 2.0f)
 		{
-			Debug.Log("Muy efectivo ");
+			Debug.Log("Muy efectivo");
 		}
 		else
 		{
-			messsage = "Super efectivo ";
+			messsage = "Super efectivo";
 		}
-		//messsage+=damage*multiplier;
-
+		
 		ManagerUITextsUp.instance.SetText(messsage,transform.position-new Vector3(0,2.5f,0),Color.white);
 		ManagerUITextsUp.instance.SetText((totalDamage).ToString("0"),transform.position,Color.red);
 
