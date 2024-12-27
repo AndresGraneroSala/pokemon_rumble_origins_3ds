@@ -64,21 +64,34 @@ public class PlayerAttack : MonoBehaviour
 
 		if (attack.MovePlayer>0)
 		{
-			yield return StartCoroutine(MoveCoroutine(attack.MovePlayer,attack.MovePlayerSpeed));
+			if (!attack.IsBulletBefore)
+			{
+				yield return StartCoroutine(MoveCoroutine(attack.MovePlayer,attack.MovePlayerSpeed));
+				
+			}
+			else
+			{
+				StartCoroutine(MoveCoroutine(attack.MovePlayer,attack.MovePlayerSpeed));
+
+			}
 		}
 
 		if (attack.Bullet!=null)
 		{
-			GameObject bullet= Instantiate(attack.Bullet, spawnBullets.position, Quaternion.identity,spawnBullets);
+			GameObject bullet = Instantiate(attack.Bullet, spawnBullets);
+			
+			
 			AttackCollision [] damages= bullet.GetComponentsInChildren<AttackCollision>();
 			foreach (var damage in damages)
 			{
 				
 				damage.SetDamage(attack.Damage, attack.Type,true);
 			}
-			
-			
-			bullet.GetComponent<Billboard>().SetBillboard(model.eulerAngles.y);
+
+			if (bullet.GetComponent<Billboard>())
+			{
+				bullet.GetComponent<Billboard>().SetBillboard(model.eulerAngles.y);
+			}
 		}
 	}
 	

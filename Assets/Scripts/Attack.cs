@@ -72,6 +72,13 @@ public class Attack
 		get { return bullet; }
 	}
 
+	[SerializeField] private bool isBulletBefore = false;
+
+	public bool IsBulletBefore
+	{
+		get { return isBulletBefore; }
+	}
+
 	[SerializeField] private float movePlayer = 0;
 
 	public float MovePlayer
