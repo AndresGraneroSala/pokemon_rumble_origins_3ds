@@ -19,10 +19,22 @@ public class Opponent : MonoBehaviour {
     private RotateBone _boneAttack;
     
     [SerializeField] float rotationSpeedDelay=10;
-    
+
+    public float RotationSpeedDelay
+    {
+	    get { return rotationSpeedDelay; }
+    }
+
     private float _distanceToPlayer=0;
 
     private bool _isAttacking;
+
+    public bool IsAttacking
+    {
+	    get { return _isAttacking; }
+	    set { _isAttacking = value; }
+    }
+
     private float _upChecker = 0.1f;
 
     [SerializeField] private Attack.TypeAttack typePokemon1;
@@ -33,13 +45,18 @@ public class Opponent : MonoBehaviour {
     }
     [SerializeField] private Attack.TypeAttack typePokemon2;
 
+    private PlayAttack _playAttack;
     public Attack.TypeAttack TypePokemon2
     {
 	    get { return typePokemon2; }
     }
 
     // Use this for initialization
-	void Start () {
+	void Start ()
+	{
+
+		_playAttack = GetComponent<PlayAttack>();
+		
 		target = GameObject.FindGameObjectWithTag("Player").transform;
 		agent.stoppingDistance = distanceToAttack;
 		
@@ -86,7 +103,8 @@ public class Opponent : MonoBehaviour {
 				agent.isStopped = true;
         
 				// Ejecutamos la animación o lógica de ataque
-				StartCoroutine(PlayAttack(attack));
+				//StartCoroutine(PlayAttack(attack));
+				StartCoroutine(_playAttack.Play(attack));
 			}
 			else
 			{
@@ -102,7 +120,7 @@ public class Opponent : MonoBehaviour {
 		}
 	}
 
-	private void ChangeSpeedBones(float speed)
+	public void ChangeSpeedBones(float speed)
 	{
 		foreach (var bone in _bones)
 		{
@@ -136,9 +154,11 @@ public class Opponent : MonoBehaviour {
 				damage.SetDamage(attack.Damage, attack.Type,false);
 				
 			}
-			
-			
-			bullet.GetComponent<Billboard>().SetBillboard(transform.eulerAngles.y);
+
+			if (bullet.GetComponent<Billboard>())
+			{
+				bullet.GetComponent<Billboard>().SetBillboard(transform.eulerAngles.y);
+			}
 		}
 		
 		if (attack.MovePlayer>0)
