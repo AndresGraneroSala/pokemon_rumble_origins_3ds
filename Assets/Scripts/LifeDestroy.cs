@@ -23,7 +23,11 @@ public class LifeDestroy : MonoBehaviour
 
 		string messsage="";
 
-		if (multiplier >= 0.0f && multiplier < 0.25f)
+		if (multiplier == 0.0f)
+		{
+			messsage = "Inmune";
+		}
+		else if (multiplier > 0.0f && multiplier < 0.25f)
 		{
 			messsage = "Muy poco efectivo";
 		}
@@ -47,7 +51,7 @@ public class LifeDestroy : MonoBehaviour
 		{
 			messsage = "Super efectivo";
 		}
-		
+
 		ManagerUITextsUp.instance.SetText(messsage,transform.position-new Vector3(0,2.5f,0),Color.white);
 		ManagerUITextsUp.instance.SetText((totalDamage).ToString("0"),transform.position,Color.red);
 
