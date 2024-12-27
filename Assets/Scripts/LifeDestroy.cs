@@ -8,9 +8,10 @@ public class LifeDestroy : MonoBehaviour
 
 	[SerializeField] private float life=100;
 	[SerializeField] private Lifebar lifebar;
-
+	private float initLife=0;
 	private void Awake()
 	{
+		initLife = life;
 		lifebar.transform.SetParent(GameObject.Find("CanvasUP").transform);
 		lifebar.gameObject.SetActive(false);
 		
@@ -40,14 +41,14 @@ public class LifeDestroy : MonoBehaviour
 		}
 		//messsage+=damage*multiplier;
 
-		ManagerUITextsUp.instance.SetText(messsage,transform.position-new Vector3(0,1.5f,0),Color.white);
+		ManagerUITextsUp.instance.SetText(messsage,transform.position-new Vector3(0,2.5f,0),Color.white);
 		ManagerUITextsUp.instance.SetText((totalDamage).ToString("0"),transform.position,Color.red);
 
 		lifebar.gameObject.SetActive(true);
-		lifebar.ChangeLife((life-totalDamage)/life);
+		lifebar.ChangeLife((life-totalDamage)/initLife);
 		lifebar.GetComponent<UIWorldPostion>().SetTransform(transform, new Vector3(0,-30,0));
 		
-		life -= damage*multiplier;
+		life -= totalDamage;
 	}
 	
 	// Update is called once per frame
