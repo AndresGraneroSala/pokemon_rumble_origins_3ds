@@ -101,9 +101,6 @@ public class Opponent : MonoBehaviour {
 			{
 				// Detenemos al agente cuando está dentro del rango de ataque
 				agent.isStopped = true;
-        
-				// Ejecutamos la animación o lógica de ataque
-				//StartCoroutine(PlayAttack(attack));
 				StartCoroutine(_playAttack.Play(attack));
 			}
 			else
@@ -126,74 +123,6 @@ public class Opponent : MonoBehaviour {
 		{
 			bone.SetSpeedState(speed);
 		}
-	}
-	
-	private IEnumerator PlayAttack(Attack attack)
-	{
-		
-		_isAttacking = true;
-		_boneAttack.Configure(attack.Rotate);
-		ChangeSpeedBones(0.25f);
-
-		StartCoroutine( RotateTowardsCoroutine());
-		
-		yield return new WaitForSeconds(attack.Delay);
-		
-		StopCoroutine(RotateTowardsCoroutine());
-		
-		_boneAttack.PlayAttack();
-
-		
-
-		if (attack.Bullet!=null)
-		{
-			GameObject bullet= Instantiate(attack.Bullet, spawnBullets.position, Quaternion.identity,spawnBullets);
-			AttackCollision [] damages= bullet.GetComponentsInChildren<AttackCollision>();
-			foreach (var damage in damages)
-			{
-				damage.SetDamage(attack.Damage, attack.Type,false);
-				
-			}
-
-			if (bullet.GetComponent<Billboard>())
-			{
-				bullet.GetComponent<Billboard>().SetBillboard(transform.eulerAngles.y);
-			}
-		}
-		
-		if (attack.MovePlayer>0)
-		{
-			yield return StartCoroutine(MoveCoroutine(attack.MovePlayer,attack.MovePlayerSpeed));
-		}
-		_isAttacking = false;
-		ChangeSpeedBones(1);
-
-	}
-	
-	private IEnumerator MoveCoroutine(float distance, float speed)
-	{
-		Vector3 startPosition = transform.position; // Posición inicial del objeto
-		Vector3 targetPosition = startPosition + transform.forward * distance; // Posición objetivo
-
-		float elapsedTime = 0f;
-		float journeyLength = Vector3.Distance(startPosition, targetPosition);
-
-		while (elapsedTime < journeyLength / speed)
-		{
-			if (IsColliderInFront())
-			{
-				break;
-			}
-			
-			// Interpolar la posición
-			transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime * speed) / journeyLength);
-			elapsedTime += Time.deltaTime;
-			yield return null; // Espera un frame
-		}
-
-		// Asegurarse de llegar a la posición final
-		//transform.position = targetPosition;
-		
 	}
 	
 	

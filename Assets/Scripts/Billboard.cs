@@ -9,8 +9,9 @@ public class Billboard : MonoBehaviour
         // Cambia la rotación del eje X a 50 grados, manteniendo los valores actuales de Y y Z
         Vector3 currentRotation = transform.rotation.eulerAngles;
         currentRotation.x = 45;
+        currentRotation.y = rotationModel * -1;
         currentRotation.z = rotationModel * -1;
-        transform.rotation = Quaternion.Euler(currentRotation);
+        transform.localRotation = Quaternion.Euler(currentRotation);
     }
 
     void Start()

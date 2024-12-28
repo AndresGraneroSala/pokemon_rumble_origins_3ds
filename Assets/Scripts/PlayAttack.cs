@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class PlayAttack : MonoBehaviour {
@@ -36,8 +37,8 @@ public class PlayAttack : MonoBehaviour {
 
 	public IEnumerator Play(Attack attack)
 	{
-		
-		
+
+
 		if (isPlayer)
 		{
 			_playerMove.block = true;
@@ -48,53 +49,58 @@ public class PlayAttack : MonoBehaviour {
 			_opponent.IsAttacking = true;
 			_opponent.ChangeSpeedBones(0.25f);
 		}
-		
-		
+
+
 		rotateBone.Configure(attack.Rotate);
 
 		if (!isPlayer)
 		{
-			StartCoroutine( RotateTowardsCoroutine());
+			StartCoroutine(RotateTowardsCoroutine());
 		}
-		
+
 		yield return new WaitForSeconds(attack.Delay);
 
 		if (!isPlayer)
 		{
 			StopCoroutine(RotateTowardsCoroutine());
 		}
-		
+
 		rotateBone.PlayAttack();
 
-		if (attack.MovePlayer>0)
+		if (attack.MovePlayer > 0)
 		{
 			if (!attack.IsBulletBefore)
 			{
-				yield return StartCoroutine(MoveCoroutine(attack.MovePlayer,attack.MovePlayerSpeed));
-				
+				yield return StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
+
 			}
 			else
 			{
-				StartCoroutine(MoveCoroutine(attack.MovePlayer,attack.MovePlayerSpeed));
+				StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
 
 			}
 		}
 
-		if (attack.Bullet!=null)
+		if (attack.Bullet != null)
 		{
 			GameObject bullet = Instantiate(attack.Bullet, spawnBullets);
-			
-			
-			AttackCollision [] damages= bullet.GetComponentsInChildren<AttackCollision>();
+
+
+			AttackCollision[] damages = bullet.GetComponentsInChildren<AttackCollision>();
 			foreach (var damage in damages)
 			{
-				
-				damage.SetDamage(attack.Damage, attack.Type,isPlayer);
+
+				damage.SetDamage(attack.Damage, attack.Type, isPlayer);
 			}
 
 			if (bullet.GetComponent<Billboard>())
 			{
 				bullet.GetComponent<Billboard>().SetBillboard(model.eulerAngles.y);
+			}
+
+			if (attack.MovePlayer>0)
+			{
+				bullet.GetComponent<DestroyTime>().Config(attack.MovePlayer, attack.MovePlayerSpeed);
 			}
 		}
 
@@ -105,7 +111,7 @@ public class PlayAttack : MonoBehaviour {
 		}
 
 	}
-	
+
 	private IEnumerator MoveCoroutine(float distance, float speed)
 	{
 		if (isPlayer)
