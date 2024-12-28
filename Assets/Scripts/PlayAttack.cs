@@ -136,7 +136,7 @@ public class PlayAttack : MonoBehaviour {
 			}
 			else
 			{
-				if (_opponent.IsColliderInFront())
+				if (_opponent.IsColliderInAnyDirection())
 				{
 					yield break;
 				}

@@ -130,24 +130,24 @@ public class Opponent : MonoBehaviour {
 	[SerializeField] private float detectionDistance = 1.0f;
 	// Capa de los objetos que deben ser detectados
 	[SerializeField] private LayerMask obstacleLayer;
-	public bool IsColliderInFront()
+	public bool IsColliderInDirection(Vector3 direction)
 	{
-		// Lanzamos un Raycast en la dirección en la que el jugador está mirando
+		// Lanzamos un Raycast en la dirección especificada
 		RaycastHit hit;
-		Vector3 forwardDirection = transform.TransformDirection(Vector3.forward);
+		Vector3 worldDirection = transform.TransformDirection(direction);
 
-		// Verifica si hay un objeto en frente del jugador (no se dibuja aquí)
-		if (Physics.Raycast(transform.position+ new Vector3(0,_upChecker,0), forwardDirection, out hit, detectionDistance, obstacleLayer))
+		// Verifica si hay un objeto en la dirección indicada (no se dibuja aquí)
+		if (Physics.Raycast(transform.position + new Vector3(0, _upChecker, 0), worldDirection, out hit, detectionDistance, obstacleLayer))
 		{
 			// Si el objeto tiene un Collider 3D que no es Trigger, no moveremos al jugador
 			if (hit.collider != null && !hit.collider.isTrigger)
 			{
-				return true; // Hay un collider no trigger delante
+				return true; // Hay un collider no trigger en la dirección
 			}
 		}
-		return false; // No hay ningún collider no trigger delante
-	}	
-	
+		return false; // No hay ningún collider no trigger en la dirección
+	}
+
 	private void OnDrawGizmos()
 	{
 		// Asegúrate de que el objeto está seleccionado y activado
@@ -156,12 +156,27 @@ public class Opponent : MonoBehaviour {
 			// Configuramos el color del Gizmo
 			Gizmos.color = Color.blue;
 
-			// Dirección en la que se lanza el raycast
-			Vector3 forwardDirection = transform.TransformDirection(Vector3.forward);
-			// Dibujamos el Gizmo en el editor (un rayo)
-			Gizmos.DrawRay(transform.position+ new Vector3(0,_upChecker,0), forwardDirection * detectionDistance);
+			// Direcciones en las que se lanzarán los rayos
+			Vector3[] directions = new Vector3[] { Vector3.forward, Vector3.back, Vector3.left, Vector3.right };
+
+			foreach (Vector3 direction in directions)
+			{
+				Vector3 worldDirection = transform.TransformDirection(direction);
+				// Dibujamos el Gizmo en el editor (un rayo por cada dirección)
+				Gizmos.DrawRay(transform.position + new Vector3(0, _upChecker, 0), worldDirection * detectionDistance);
+			}
 		}
 	}
+
+// Uso del método para comprobar todas las direcciones
+	public bool IsColliderInAnyDirection()
+	{
+		return IsColliderInDirection(Vector3.forward) ||
+		       IsColliderInDirection(Vector3.back) ||
+		       IsColliderInDirection(Vector3.left) ||
+		       IsColliderInDirection(Vector3.right);
+	}
+
 	
 	private IEnumerator RotateTowardsCoroutine()
 	{
