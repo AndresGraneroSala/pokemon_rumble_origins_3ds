@@ -9,8 +9,10 @@ public class LifeDestroy : MonoBehaviour
 	[SerializeField] private float life=100;
 	[SerializeField] private Lifebar lifebar;
 	private float initLife=0;
-	private void Awake()
+	private bool isPlayer = false;
+	private void Start()
 	{
+		isPlayer = gameObject.tag == "Player";
 		initLife = life;
 		lifebar.transform.SetParent(GameObject.Find("CanvasUP").transform);
 		lifebar.gameObject.SetActive(false);
@@ -57,7 +59,7 @@ public class LifeDestroy : MonoBehaviour
 
 		lifebar.gameObject.SetActive(true);
 		lifebar.ChangeLife((life-totalDamage)/initLife);
-		lifebar.GetComponent<UIWorldPostion>().SetTransform(transform, new Vector3(0,-30,0));
+		lifebar.GetComponent<UIWorldPostion>().SetTransform(transform, new Vector3(0,-20,0));
 		
 		life -= totalDamage;
 	}
@@ -66,7 +68,14 @@ public class LifeDestroy : MonoBehaviour
 	void Update () {
 		if (life<=0)
 		{
-			Destroy(gameObject);
+			if (isPlayer)
+			{
+				GameManager.instance.EndGame();
+			}
+			else
+			{
+				Destroy(gameObject);
+			}
 		}
 	}
 	

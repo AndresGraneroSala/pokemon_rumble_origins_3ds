@@ -3,8 +3,8 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[Serializable]
-public class Attack
+[CreateAssetMenu(fileName = "NewAttack", menuName = "Pokemon/Attack", order = 1)]
+public class Attack: ScriptableObject
 {
 	public enum TypeAttack
 	{
@@ -44,13 +44,6 @@ public class Attack
 		get { return damage; }
 	}
 
-	[SerializeField] private float range = 5;
-
-	public float Range
-	{
-		get { return range; }
-	}
-
 	[SerializeField] private float fireRate = 2;
 
 	public float FireRate
@@ -63,6 +56,13 @@ public class Attack
 	public float Delay
 	{
 		get { return delay; }
+	}
+	
+	[SerializeField] private float delayOpponent = 0;
+
+	public float DelayOpponent
+	{
+		get { return delayOpponent; }
 	}
 
 	[SerializeField] private GameObject bullet;

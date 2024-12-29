@@ -16,7 +16,6 @@ public class Opponent : MonoBehaviour {
 	[SerializeField] private Transform spawnBullets;
     
     private RotateBone [] _bones;
-    private RotateBone _boneAttack;
     
     [SerializeField] float rotationSpeedDelay=10;
 
@@ -64,9 +63,8 @@ public class Opponent : MonoBehaviour {
 			.Where(bone => !bone.IsAttack) // Filtra los que no son isAttack
 			.ToArray();
 		
-		_boneAttack = GetComponentsInChildren<RotateBone>()
-			.Where(bone => bone.IsAttack) // Filtra los que no son isAttack
-			.ToArray()[0];	}
+	
+	}
 	
 	// Update is called once per frame
 	void Update()

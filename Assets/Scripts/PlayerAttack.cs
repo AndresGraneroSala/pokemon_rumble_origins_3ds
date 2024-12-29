@@ -49,7 +49,7 @@ public class PlayerAttack : MonoBehaviour
 			 StartCoroutine(_playAttack.Play(attack1));
 		}
 		
-		if (!isAttacking && (Input.GetKey(KeyCode.Mouse1) || UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.B)))
+		if (!isAttacking && (Input.GetKeyDown(KeyCode.Mouse1) || UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.B)))
 		{
 			isAttacking = true;
 			StartCoroutine(_playAttack.Play(attack2));

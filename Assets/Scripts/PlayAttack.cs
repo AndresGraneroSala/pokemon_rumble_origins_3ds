@@ -58,7 +58,14 @@ public class PlayAttack : MonoBehaviour {
 			StartCoroutine(RotateTowardsCoroutine());
 		}
 
-		yield return new WaitForSeconds(attack.Delay);
+		if (isPlayer)
+		{
+			yield return new WaitForSeconds(attack.Delay);
+		}
+		else
+		{
+			yield return new WaitForSeconds(attack.DelayOpponent);
+		}
 
 		if (!isPlayer)
 		{
@@ -98,7 +105,7 @@ public class PlayAttack : MonoBehaviour {
 				bullet.GetComponent<Billboard>().SetBillboard(model.eulerAngles.y);
 			}
 
-			if (attack.MovePlayer>0)
+			if (bullet.GetComponent<DestroyTime>())
 			{
 				bullet.GetComponent<DestroyTime>().Config(attack.MovePlayer, attack.MovePlayerSpeed);
 			}

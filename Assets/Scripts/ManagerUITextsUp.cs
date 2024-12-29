@@ -22,7 +22,7 @@ public class ManagerUITextsUp : MonoBehaviour
 	{
 		if (textPrefab == null || store == null)
 		{
-			Debug.LogError("El prefab de texto o el Canvas no están configurados.");
+			Debug.LogError(gameObject.name+ ": El prefab de texto o el Canvas no están configurados.");
 			return;
 		}
 
