@@ -6,15 +6,12 @@ using UnityEngine.AI;
 
 public class Opponent : MonoBehaviour {
 
-    [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Transform target;
     
     [SerializeField] private float distanceToAttack=1;
     [SerializeField] private float distanceToMove=10;
     
     [SerializeField] private Attack attack;
-	[SerializeField] private Transform spawnBullets;
-    
     private RotateBone [] _bones;
     
     [SerializeField] float rotationSpeedDelay=10;
@@ -50,6 +47,8 @@ public class Opponent : MonoBehaviour {
 	    get { return typePokemon2; }
     }
 
+    private DirectMovement _directMovement;
+    
     // Use this for initialization
 	void Start ()
 	{
@@ -57,13 +56,15 @@ public class Opponent : MonoBehaviour {
 		_playAttack = GetComponent<PlayAttack>();
 		
 		target = GameObject.FindGameObjectWithTag("Player").transform;
-		agent.stoppingDistance = distanceToAttack;
 		
 		_bones = GetComponentsInChildren<RotateBone>()
 			.Where(bone => !bone.IsAttack) // Filtra los que no son isAttack
 			.ToArray();
 		
-	
+		_playAttack.InitPool(attack);
+
+		_directMovement = GetComponent<DirectMovement>();
+		
 	}
 	
 	// Update is called once per frame
@@ -74,44 +75,28 @@ public class Opponent : MonoBehaviour {
 		{
 			return;
 		}
-
-		if (agent.pathPending || agent.remainingDistance == Mathf.Infinity || agent.remainingDistance <= 0.0f|| agent.isStopped)
-		{
 			_distanceToPlayer = Vector3.Distance(transform.position, target.position);
-
-			if (!agent.isStopped)
-			{
-				ChangeSpeedBones(0);
-			}
 			
-			agent.isStopped = true;
-
-		}
-		else
-		{
-			// Muestra la distancia restante en la consola.
-			_distanceToPlayer = agent.remainingDistance;
-		}
 
 		if (_distanceToPlayer <= distanceToMove) 
 		{
 			if (_distanceToPlayer <= distanceToAttack) 
 			{
 				// Detenemos al agente cuando está dentro del rango de ataque
-				agent.isStopped = true;
-				StartCoroutine(_playAttack.Play(attack));
+				_directMovement.enabled = false;
+				StartCoroutine(_playAttack.Play(attack,1));
 			}
 			else
 			{
 				// Si está dentro del rango de persecución pero no de ataque, el agente sigue persiguiendo
-				agent.isStopped = false;
-				agent.SetDestination(target.position);
+				_directMovement.enabled = true;
+
 			}
 		}
 		else
 		{
 			// Si el jugador se aleja del rango de persecución, detenemos al agente
-			agent.isStopped = true;
+			_directMovement.enabled = false;
 		}
 	}
 
@@ -166,42 +151,13 @@ public class Opponent : MonoBehaviour {
 		}
 	}
 
-// Uso del método para comprobar todas las direcciones
+// Uso del método para comprobar todas las direcciones se usa en otro script
 	public bool IsColliderInAnyDirection()
 	{
 		return IsColliderInDirection(Vector3.forward) ||
 		       IsColliderInDirection(Vector3.back) ||
 		       IsColliderInDirection(Vector3.left) ||
 		       IsColliderInDirection(Vector3.right);
-	}
-
-	
-	private IEnumerator RotateTowardsCoroutine()
-	{
-		while (true)
-		{
-			// Calcula la dirección hacia el objetivo
-			Vector3 direction = target.position - transform.position;
-
-			// Si la dirección es muy pequeña, termina la rotación
-			if (direction.magnitude < 0.01f)
-			{
-				yield break;
-			}
-
-			// Calcula la rotación deseada
-			Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-			// Aplica una rotación suave hacia la rotación deseada
-			transform.rotation = Quaternion.Lerp(
-				transform.rotation,
-				targetRotation,
-				rotationSpeedDelay * Time.deltaTime
-			);
-
-			// Espera al siguiente frame antes de continuar
-			yield return null;
-		}
 	}
 	
 }

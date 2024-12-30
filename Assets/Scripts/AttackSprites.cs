@@ -55,7 +55,8 @@ public class AttackSprites : MonoBehaviour {
 			currentSpriteIndex = 0;
 			if (repeatTimes<=0)
 			{
-				Destroy(gameObject);
+				//Destroy(gameObject);
+				gameObject.SetActive(false);
 				return;
 			}
 			

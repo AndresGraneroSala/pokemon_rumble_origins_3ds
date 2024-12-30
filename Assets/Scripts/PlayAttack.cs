@@ -22,6 +22,8 @@ public class PlayAttack : MonoBehaviour {
 	
 	private Transform target;
 
+	private GameObject _prefAttack1, _prefAttack2;
+	
 	private void Start()
 	{
 		_playerMove = GetComponent<PlayerMove>();
@@ -35,7 +37,25 @@ public class PlayAttack : MonoBehaviour {
 		
 	}
 
-	public IEnumerator Play(Attack attack)
+	public void InitPool(Attack attack,int posAtt=1)
+	{
+		if (attack.Bullet==null)
+		{
+			return;
+		}
+		if (posAtt==1)
+		{
+			_prefAttack1 = Instantiate(attack.Bullet, spawnBullets);
+			_prefAttack1.SetActive(false);
+		}
+		else
+		{
+			_prefAttack2 = Instantiate(attack.Bullet, spawnBullets);
+			_prefAttack2.SetActive(false);
+		}
+	}
+
+	public IEnumerator Play(Attack attack, int posAtt=1)
 	{
 
 
@@ -88,18 +108,22 @@ public class PlayAttack : MonoBehaviour {
 			}
 		}
 
+		
+		if (!isPlayer)
+		{
+			_opponent.IsAttacking = false;
+			_opponent.ChangeSpeedBones(1);
+		}
+		
+		
+		
 		if (attack.Bullet != null)
 		{
-			GameObject bullet = Instantiate(attack.Bullet, spawnBullets);
-
-
-			AttackCollision[] damages = bullet.GetComponentsInChildren<AttackCollision>();
-			foreach (var damage in damages)
-			{
-
-				damage.SetDamage(attack.Damage, attack.Type, isPlayer);
-			}
-
+			GameObject bullet = posAtt == 1 ? _prefAttack1 : _prefAttack2;
+			bullet.SetActive(true);
+			
+			bullet.GetComponent<AttackCollision>().SetDamage(attack.Damage, attack.Type, isPlayer);
+			
 			if (bullet.GetComponent<Billboard>())
 			{
 				bullet.GetComponent<Billboard>().SetBillboard(model.eulerAngles.y);
@@ -110,13 +134,6 @@ public class PlayAttack : MonoBehaviour {
 				bullet.GetComponent<DestroyTime>().Config(attack.MovePlayer, attack.MovePlayerSpeed);
 			}
 		}
-
-		if (!isPlayer)
-		{
-			_opponent.ChangeSpeedBones(1);
-			_opponent.IsAttacking = false;
-		}
-
 	}
 
 	private IEnumerator MoveCoroutine(float distance, float speed)

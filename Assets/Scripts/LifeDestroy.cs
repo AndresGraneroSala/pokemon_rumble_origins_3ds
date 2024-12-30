@@ -53,19 +53,19 @@ public class LifeDestroy : MonoBehaviour
 		{
 			messsage = "Super efectivo";
 		}
-
 		ManagerUITextsUp.instance.SetText(messsage,transform.position-new Vector3(0,2.5f,0),Color.white);
 		ManagerUITextsUp.instance.SetText((totalDamage).ToString("0"),transform.position,Color.red);
 
-		lifebar.gameObject.SetActive(true);
+		if (!lifebar.isActiveAndEnabled)
+		{
+			lifebar.gameObject.SetActive(true);
+		}
 		lifebar.ChangeLife((life-totalDamage)/initLife);
 		lifebar.GetComponent<UIWorldPostion>().SetTransform(transform, new Vector3(0,-20,0));
 		
 		life -= totalDamage;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+		
+		
 		if (life<=0)
 		{
 			if (isPlayer)
@@ -78,7 +78,4 @@ public class LifeDestroy : MonoBehaviour
 			}
 		}
 	}
-	
-	//TODO: barra de vida
-	//refactorizar el ataque
 }

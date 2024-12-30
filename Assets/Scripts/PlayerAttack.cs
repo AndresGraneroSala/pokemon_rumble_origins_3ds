@@ -27,6 +27,10 @@ public class PlayerAttack : MonoBehaviour
 	void Start () {
 		_playerMove = gameObject.GetComponent<PlayerMove>();
 		_playAttack = GetComponent<PlayAttack>();
+		
+		_playAttack.InitPool(attack1);
+		_playAttack.InitPool(attack2,2);
+		
 	}
 	
 	// Update is called once per frame
@@ -52,7 +56,7 @@ public class PlayerAttack : MonoBehaviour
 		if (!isAttacking && (Input.GetKeyDown(KeyCode.Mouse1) || UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.B)))
 		{
 			isAttacking = true;
-			StartCoroutine(_playAttack.Play(attack2));
+			StartCoroutine(_playAttack.Play(attack2,2));
 		}
 
 	}

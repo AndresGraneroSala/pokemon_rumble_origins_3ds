@@ -1,49 +1,50 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class TextFade : MonoBehaviour
 {
+    [SerializeField] private float fadeDuration = 2f;
+    private Text textComponent;
+    private Color originalColor;
+    private float fadeTimer;
+    private System.Action onFadeComplete;
+    private bool isFading;
 
-	[SerializeField] private float timeToFade = 2;
+    private void Awake()
+    {
+        textComponent = GetComponent<Text>();
+    }
 
-	private float _timer = 0;
+    public void Run(System.Action fadeCompleteCallback)
+    {
+        if (textComponent == null)
+        {
+            return;
+        }
 
-	private Text _text;
-	private Color _color;
+        isFading = true;
+        fadeTimer = 0f;
+        originalColor = textComponent.color;
+        onFadeComplete = fadeCompleteCallback;
+    }
 
-	private void Start()
-	{
-		_text = GetComponent<Text>();
-		_color = _text.color;
-	}
+    private void Update()
+    {
+        if (!isFading) return;
 
-
-
-	// Update is called once per frame
-	void Update()
-	{
-
-		_timer += Time.deltaTime;
-
-
-
-		if (_timer >= timeToFade)
-		{
-			Destroy(gameObject);
-		}
-		else
-		{
-			_color.a -= Time.deltaTime / timeToFade;
-			_text.color = _color;
-		}
-
-		// Convertir la posición del mundo a pantalla
-
-	}
-
-
+        fadeTimer += Time.deltaTime;
+        if (fadeTimer >= fadeDuration)
+        {
+            isFading = false;
+            if (onFadeComplete != null) // Evitar operador '?.'
+            {
+                onFadeComplete.Invoke();
+            }
+        }
+        else
+        {
+            float alpha = Mathf.Lerp(originalColor.a, 0, fadeTimer / fadeDuration);
+            textComponent.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+        }
+    }
 }
-

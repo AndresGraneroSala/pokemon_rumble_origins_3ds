@@ -10,6 +10,7 @@ public class DestroyTime : MonoBehaviour {
 	
 	public void Config(float moveDistance, float moveSpeed)
 	{
+		_timer = 0f;
 		float movement = moveDistance / moveSpeed;
 		destroyTime = movement;
 		destroyTime += 0.05f;
@@ -20,7 +21,7 @@ public class DestroyTime : MonoBehaviour {
 		_timer+=Time.deltaTime;
 		if (_timer >= destroyTime)
 		{
-			Destroy(gameObject);
+			gameObject.SetActive(false);
 		}
 	}
 }

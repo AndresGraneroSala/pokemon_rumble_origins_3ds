@@ -31,7 +31,6 @@ public class UIWorldPostion : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
 		Vector3 screenPosition = !_transformFollow
 			? _upCamera.WorldToScreenPoint(_startPos)
 			: _upCamera.WorldToScreenPoint(_transformFollow.position);

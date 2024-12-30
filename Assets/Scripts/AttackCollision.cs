@@ -20,6 +20,7 @@ public class AttackCollision : MonoBehaviour
 
 	public void SetDamage(float damage, Attack.TypeAttack type, bool isPlayer)
 	{
+		enemiesAttacked = new List<GameObject>();
 		_isPlayer = isPlayer;
 		_typeAttack = type;
 
@@ -54,7 +55,7 @@ public class AttackCollision : MonoBehaviour
 			if (!enemiesAttacked.Contains(other.gameObject))
 			{
 				enemiesAttacked.Add(other.gameObject);
-				
+
 				PlayerStats stats = other.GetComponent<PlayerStats>();
 				float multiplier = Attack.GetMultiplicatorType(_typeAttack, stats.Type1);
 
@@ -63,8 +64,8 @@ public class AttackCollision : MonoBehaviour
 				{
 					multiplier *= Attack.GetMultiplicatorType(_typeAttack, stats.Type2);
 				}
-				
-				other.GetComponent<LifeDestroy>().Damage(_damage, multiplier); }
+				other.GetComponent<LifeDestroy>().Damage(_damage, multiplier);
+			}
 		}
 	}
 }
