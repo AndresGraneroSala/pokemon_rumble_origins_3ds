@@ -14,7 +14,7 @@ public class LifeDestroy : MonoBehaviour
 	{
 		isPlayer = gameObject.tag == "Player";
 		initLife = life;
-		lifebar.transform.SetParent(GameObject.Find("CanvasUP").transform);
+		//lifebar.transform.SetParent(GameObject.Find("CanvasUP").transform);
 		lifebar.gameObject.SetActive(false);
 		
 	}
@@ -61,7 +61,7 @@ public class LifeDestroy : MonoBehaviour
 			lifebar.gameObject.SetActive(true);
 		}
 		lifebar.ChangeLife((life-totalDamage)/initLife);
-		lifebar.GetComponent<UIWorldPostion>().SetTransform(transform, new Vector3(0,-20,0));
+		//lifebar.GetComponent<UIWorldPostion>().SetTransform(transform, new Vector3(0,-20,0));
 		
 		life -= totalDamage;
 		

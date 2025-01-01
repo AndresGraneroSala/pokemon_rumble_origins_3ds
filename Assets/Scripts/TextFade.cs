@@ -28,7 +28,7 @@ public class TextFade : MonoBehaviour
         onFadeComplete = fadeCompleteCallback;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!isFading) return;
 

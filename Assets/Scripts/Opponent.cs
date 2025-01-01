@@ -49,6 +49,11 @@ public class Opponent : MonoBehaviour {
 
     private DirectMovement _directMovement;
     
+    public Transform Model
+    {
+	    get { return _directMovement.ModelRotation; }
+    }
+
     // Use this for initialization
 	void Start ()
 	{

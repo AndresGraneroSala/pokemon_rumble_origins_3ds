@@ -47,6 +47,7 @@ public class ManagerUITextsUp : MonoBehaviour
 
 	public void SetText(string message, Vector3 positionWorld,Color color)
 	{
+		return;
 		if (textPrefab == null || store == null)
 		{
 			Debug.LogError(gameObject.name+ ": El prefab de texto o el Canvas no están configurados.");

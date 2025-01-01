@@ -183,28 +183,25 @@ public class PlayAttack : MonoBehaviour {
 	
 	private IEnumerator RotateTowardsCoroutine()
 	{
+		Transform rotateTarget = _opponent.Model; // Usa el modelo de rotación
+
 		while (true)
 		{
-			// Calcula la dirección hacia el objetivo
 			Vector3 direction = target.position - transform.position;
 
-			// Si la dirección es muy pequeña, termina la rotación
 			if (direction.magnitude < 0.01f)
 			{
 				yield break;
 			}
 
-			// Calcula la rotación deseada
 			Quaternion targetRotation = Quaternion.LookRotation(direction);
 
-			// Aplica una rotación suave hacia la rotación deseada
-			transform.rotation = Quaternion.Lerp(
-				transform.rotation,
+			rotateTarget.rotation = Quaternion.Lerp(
+				rotateTarget.rotation,
 				targetRotation,
 				_opponent.RotationSpeedDelay * Time.deltaTime
 			);
 
-			// Espera al siguiente frame antes de continuar
 			yield return null;
 		}
 	}
