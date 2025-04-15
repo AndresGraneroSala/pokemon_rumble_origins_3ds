@@ -70,7 +70,7 @@ public class PlayerMove : MonoBehaviour
             }
 
             // Aplicar el movimiento al objeto del jugador
-            transform.Translate(movement * (speed * Time.deltaTime), Space.World);
+            transform.Translate(movement * (speed * Time.deltaTime)* GameManager.instance.PlayerSpeed, Space.World);
         }
 
         // Hacer que el jugador gire hacia donde se está moviendo instantáneamente

@@ -22,8 +22,10 @@ public class DirectMovement : MonoBehaviour
     {
         if (target == null)
             return;
-
-        Vector3 direction = (target.position - modelRotation.position).normalized;
+    
+        Vector3 changedTarget = new Vector3(target.position.x, transform.position.y, target.position.z);
+        
+        Vector3 direction = (changedTarget - modelRotation.position).normalized;
         direction.y = 0; // Asegurar que no haya movimiento en el eje Y
 
         // Detectar obstáculos con un Raycast
@@ -55,8 +57,8 @@ public class DirectMovement : MonoBehaviour
     private void AvoidObstacle(Vector3 direction)
     {
         // Intentar girar a la izquierda o a la derecha para evitar el obstáculo
-        Vector3 left = Quaternion.Euler(0, -90, 0) * direction;
-        Vector3 right = Quaternion.Euler(0, 90, 0) * direction;
+        Vector3 left = Quaternion.Euler(0, -100, 0) * direction;
+        Vector3 right = Quaternion.Euler(0, 100, 0) * direction;
 
         if (!Physics.Raycast(transform.position, left, obstacleDetectionRange, obstacleLayer))
         {

@@ -8,10 +8,26 @@ public class GameManager : MonoBehaviour {
 
 	static public GameManager instance;
 	[SerializeField] private GameObject menuEndGame;
+	private int playerSpeed=1;
+
+	public int PlayerSpeed
+	{
+		get { return playerSpeed; }
+	}
 	private void Awake()
 	{
 			instance = this;
-			Time.timeScale = 1;
+			ResumeGame();
+	}
+
+	public void StopPlayer()
+	{
+		playerSpeed = 0;
+	}
+	
+	public void MovePlayer()
+	{
+		playerSpeed = 1;
 	}
 
 	private void Start()
@@ -27,9 +43,19 @@ public class GameManager : MonoBehaviour {
 	public void EndGame()
 	{
 		menuEndGame.SetActive(true);
+		PauseGame();
+	}
+
+	public void PauseGame()
+	{
 		Time.timeScale = 0;
 	}
 
+	public void ResumeGame()
+	{
+		Time.timeScale = 1;
+	}
+	
 	public void ChangePlayer()
 	{
 		

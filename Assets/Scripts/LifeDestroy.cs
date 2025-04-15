@@ -74,7 +74,10 @@ public class LifeDestroy : MonoBehaviour
 			}
 			else
 			{
-				Destroy(gameObject);
+				//Destroy(gameObject);
+				CoinManager.instance.SumCombo();
+				CoinManager.instance.SpawnCoins(gameObject.transform.position);
+				GetComponent<CatchPokemon>().ChangeToPlayer();
 			}
 		}
 	}

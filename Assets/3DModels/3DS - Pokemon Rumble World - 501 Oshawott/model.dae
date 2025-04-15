@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+<COLLADA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.4.1" xmlns="http://www.collada.org/2005/11/COLLADASchema">
+  <asset>
+    <created>2022-10-17T10:48:56.9979384-05:00</created>
+    <modified>2022-10-17T10:48:56.9979384-05:00</modified>
+  </asset>
+  <library_images>
+    <image id="Pii_MIZYUMARU_body">
+      <init_from>./Pii_MIZYUMARU_body.png</init_from>
+    </image>
+    <image id="Pii_MIZYUMARU_body_C">
+      <init_from>./Pii_MIZYUMARU_body_C.png</init_from>
+    </image>
+    <image id="Pii_MIZYUMARU_eye">
+      <init_from>./Pii_MIZYUMARU_eye.png</init_from>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="TEX_ANIM_EYE_mat_id" name="TEX_ANIM_EYE_mat">
+      <instance_effect url="#TEX_ANIM_EYE_eff_id" />
+    </material>
+    <material id="lambert2_mat_id" name="lambert2_mat">
+      <instance_effect url="#lambert2_eff_id" />
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="TEX_ANIM_EYE_eff_id" name="TEX_ANIM_EYE_eff">
+      <profile_COMMON>
+        <newparam sid="TEX_ANIM_EYE_surf">
+          <surface type="2D">
+            <init_from>Pii_MIZYUMARU_eye</init_from>
+            <format>PNG</format>
+          </surface>
+        </newparam>
+        <newparam sid="TEX_ANIM_EYE_samp">
+          <sampler2D>
+            <source>TEX_ANIM_EYE_surf</source>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <minfilter>LINEAR</minfilter>
+            <magfilter>LINEAR</magfilter>
+            <mipfilter>LINEAR</mipfilter>
+          </sampler2D>
+        </newparam>
+        <technique sid="TEX_ANIM_EYE_tech">
+          <phong>
+            <diffuse>
+              <texture texture="TEX_ANIM_EYE_samp" texcoord="uv" />
+            </diffuse>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="lambert2_eff_id" name="lambert2_eff">
+      <profile_COMMON>
+        <newparam sid="lambert2_surf">
+          <surface type="2D">
+            <init_from>Pii_MIZYUMARU_body</init_from>
+            <format>PNG</format>
+          </surface>
+        </newparam>
+        <newparam sid="lambert2_samp">
+          <sampler2D>
+            <source>lambert2_surf</source>
+            <wrap_s>MIRROR</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <minfilter>LINEAR</minfilter>
+            <magfilter>LINEAR</magfilter>
+            <mipfilter>LINEAR</mipfilter>
+          </sampler2D>
+        </newparam>
+        <technique sid="lambert2_tech">
+          <phong>
+            <diffuse>
+              <texture texture="lambert2_samp" texcoord="uv" />
+            </diffuse>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="body_0_0_geo_id" name="body_0_0">
+      <mesh>
+        <source id="body_0_0_Position_id" name="body_0_0_Position">
+          <float_array id="body_0_0_Position_array_id" count="405">0.0573374 0.0342722 -0.10726 -0.0573374 0.0342722 -0.10726 0.0608004 0.0884007 -0.105309 -0.0608004 0.0884007 -0.105309 -0.114675 0.0342722 0 -0.121601 0.0884007 0 -0.0573374 0.0342722 0.0873338 -0.0608004 0.0884007 0.105309 0.0573374 0.0342722 0.0873338 0.0608004 0.0884007 0.105309 0.114675 0.0342722 0 0.121601 0.0884007 0 0.0469363 0.185649 -0.079112 -0.0469362 0.185649 -0.079112 -0.0938725 0.217188 0 -0.0469363 0.217188 0.0770094 0.0469362 0.217188 0.0770094 0.0938725 0.217188 0 0 0.0169234 0 -0.0573382 0 0 -0.0573374 0.0342722 -0.10726 0 0.0169234 0 -0.0573374 0.0342722 0.0873338 0.0573382 0 0 0.0573374 0.0342722 0.0873338 0.0573374 0.0342722 -0.10726 0.114675 0.0342722 0 0 0.229166 0 -0.114675 0.0342722 0 -0.0487379 0.0995915 0.103368 0 0.116679 0.119409 -0.0333737 0.132003 0.0992162 0 0.142871 0.0992162 0.0333737 0.132003 0.0992162 0.0487379 0.0995915 0.103368 -0.0487379 0.0995915 0.103368 -0.0333737 0.132003 0.0992162 -0.0152151 0.0883767 0.106037 0.0487379 0.0995915 0.103368 0.0152151 0.0883767 0.106037 0.0333737 0.132003 0.0992162 0 0.142871 0.0992162 -0.0189424 0.0738112 0.103368 0.0189424 0.0738112 0.103368 -0.0189424 0.0738112 0.103368 0.0189424 0.0738112 0.103368 0 0.0746698 0.112292 0.0152151 0.0883767 0.106037 -0.0152151 0.0883767 0.106037 -0.0938725 0.217188 0 -0.167564 0.160516 0.112616 -0.0469363 0.217188 0.0770094 0.0469362 0.217188 0.0770094 0.167564 0.160516 0.112616 0.0938725 0.217188 0 -0.121601 0.0884007 0 -0.0608004 0.0884007 0.105309 0.0608004 0.0884007 0.105309 0.121601 0.0884007 0 0 0.239475 -0.128863 -0.051999 0.234905 -0.0816997 -0.116992 0.252148 -0.0698005 -0.0983935 0.237474 -0.000895672 0.051999 0.234905 -0.0816997 0.116992 0.252148 -0.0698005 -0.0989237 0.241563 0.0708506 0.0989237 0.241563 0.0708506 0.0983935 0.237474 -0.000895654 0 0.218297 -0.00844712 -0.0994681 0.241544 -0.00844712 0 0.245156 -0.124169 0 0.322679 -0.187442 -0.11598 0.305055 -0.142972 -0.171332 0.305055 -0.00844712 0 0.238217 0.10523 -0.127708 0.293451 0.124531 -0.127708 0.293451 0.124531 0 0.238217 0.10523 0 0.289563 0.15512 0.0994681 0.241544 -0.00844712 0.127708 0.293451 0.124531 0.127708 0.293451 0.124531 0.171332 0.305055 -0.00844712 0.11598 0.305055 -0.142972 -0.186862 0.376836 -0.00844712 -0.124306 0.384325 -0.152168 -0.151792 0.363582 0.123547 0 0.363582 0.181814 0.151792 0.363582 0.123547 0.186862 0.376836 -0.00844712 0.124306 0.384325 -0.152168 0 0.442226 -0.180074 -0.10825 0.463595 -0.14041 -0.161827 0.463595 -0.00844712 -0.132946 0.463595 0.117806 -0.132946 0.463595 0.117806 0 0.463595 0.168267 0.132946 0.463595 0.117806 0.132946 0.463595 0.117806 0.161827 0.463595 -0.00844712 0.10825 0.463595 -0.14041 0 0.553275 -0.00844712 0 0.533683 -0.118744 -0.0994681 0.537097 -0.00844712 0 0.542084 0.091021 0 0.463595 0.168267 0.0994681 0.537097 -0.00844712 0 0.388021 0.147039 -0.0271067 0.402591 0.177851 0.0271067 0.402591 0.177851 0.0552249 0.359458 0.158808 -0.0552249 0.359458 0.158808 -0.0271067 0.326301 0.177851 0 0.340871 0.147039 0.0271067 0.326301 0.177851 0 0.388021 0.208662 -0.0484953 0.359458 0.196893 0 0.340871 0.208662 0.0484953 0.359458 0.196893 0.124223 0.456243 -0.0537141 0.0872236 0.524346 -0.00877162 0.192326 0.493243 -0.00877162 0.124223 0.456243 0.0361708 0.161223 0.388141 -0.00877162 -0.124223 0.456243 -0.0537141 -0.192326 0.493243 -0.00877162 -0.0872236 0.524346 -0.00877162 -0.124223 0.456243 0.0361708 -0.161223 0.388141 -0.00877162 0 0.0457124 -0.314413 0.0656377 0.00524003 -0.320435 -0.0656377 0.00524001 -0.320435 0 0.0756171 -0.125946 -0.0519529 0.0479198 -0.202488 0.0519529 0.0479198 -0.202488</float_array>
+          <technique_common>
+            <accessor source="#body_0_0_Position_array_id" count="135" stride="3">
+              <param name="X" type="float" />
+              <param name="Y" type="float" />
+              <param name="Z" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_0_0_Normal_id" name="body_0_0_Normal">
+          <float_array id="body_0_0_Normal_array_id" count="405">0.295803 -0.747993 -0.594144 -0.295803 -0.747993 -0.594145 0.492741 0.125778 -0.861038 -0.492741 0.125778 -0.861038 -0.819363 -0.57268 0.0261046 -0.973518 -0.15958 -0.163699 -0.260393 -0.778149 0.57156 -0.292897 -0.22013 0.930459 0.260393 -0.778149 0.57156 0.292897 -0.22013 0.930459 0.819363 -0.57268 0.0261048 0.973518 -0.15958 -0.163699 0.492084 -0.226578 -0.840545 -0.492084 -0.226578 -0.840545 -0.987896 -0.132993 -0.079845 -0.0640196 0.616045 0.785105 0.0640196 0.616046 0.785105 0.987896 -0.132993 -0.0798445 0 -0.999623 0.0274439 -0.127766 -0.991266 0.0326909 -0.295803 -0.747993 -0.594145 0 -0.999623 0.0274439 -0.260393 -0.778149 0.57156 0.127766 -0.991265 0.0326909 0.260393 -0.778149 0.57156 0.295803 -0.747993 -0.594144 0.819363 -0.57268 0.0261048 0 0.994518 0.104564 -0.819363 -0.57268 0.0261046 -0.305957 -0.0208675 0.951817 0 0.119581 0.992824 -0.298137 0.455821 0.838654 0 0.610566 0.791966 0.298137 0.455821 0.838654 0.305957 -0.0208675 0.951817 0.0313961 -0.141625 -0.989423 0.0157006 -0.132932 -0.991001 0.0079269 -0.0606081 -0.99813 -0.0313961 -0.141625 -0.989423 -0.0105944 -0.0390944 -0.999179 -0.0104673 -0.140123 -0.990079 0 -0.124196 -0.992258 0 0.180239 -0.983623 0 0.180239 -0.983623 -0.27992 -0.696077 0.661151 0.27992 -0.696077 0.661151 0 -0.360514 0.932754 0.37082 -0.182701 0.910557 -0.370819 -0.182701 0.910557 -0.987896 -0.132993 -0.079845 -0.810126 0.252485 0.5291 -0.0640196 0.616045 0.785105 0.0640196 0.616046 0.785105 0.810126 0.252484 0.5291 0.987896 -0.132993 -0.0798445 -0.973518 -0.15958 -0.163699 -0.292897 -0.22013 0.930459 0.292897 -0.22013 0.930459 0.973518 -0.15958 -0.163699 0 0.471719 -0.881749 -0.247964 0.696711 -0.673133 -0.774931 0.488316 -0.401284 -0.742689 0.653231 0.147315 0.247964 0.696711 -0.673133 0.774932 0.488316 -0.401284 -0.707022 0.571078 0.417121 0.707022 0.571079 0.417121 0.742689 0.653231 0.147316 0 -0.999626 -0.0273458 -0.433727 -0.900023 -0.0428862 0 -0.87572 -0.48282 0 -0.255832 -0.966721 -0.636054 -0.505821 -0.582735 -0.881612 -0.471958 0.00391501 0 -0.911171 0.412029 -0.515355 -0.588851 0.622627 -0.515355 -0.588851 0.622627 0 -0.911171 0.412029 0 -0.530774 0.847514 0.433727 -0.900023 -0.0428862 0.515355 -0.588851 0.622627 0.515355 -0.588851 0.622627 0.881612 -0.471958 0.00391506 0.636054 -0.505821 -0.582735 -0.990351 0.064046 -0.122892 -0.595842 0.0469885 -0.801726 -0.79901 -0.0705726 0.597162 0 -0.052293 0.998632 0.79901 -0.0705727 0.597162 0.990351 0.064046 -0.122892 0.595842 0.0469885 -0.801726 0 0.284527 -0.958668 -0.637858 0.492175 -0.592369 -0.878127 0.472938 -0.0722667 -0.659977 0.468985 0.586927 -0.659977 0.468985 0.586927 0 0.444988 0.895536 0.659977 0.468985 0.586927 0.659977 0.468985 0.586927 0.878127 0.472938 -0.0722668 0.637858 0.492175 -0.592369 0 0.999492 -0.0318871 0 0.855307 -0.518121 -0.479492 0.876563 -0.0415349 0 0.904718 0.426011 0 0.444988 0.895536 0.479492 0.876563 -0.0415349 0 0.761394 -0.64829 -0.462278 0.885732 0.0421664 0.462278 0.885732 0.0421665 0.921463 -0.0702535 -0.382061 -0.921463 -0.0702537 -0.382061 -0.387186 -0.921185 0.0387997 0 -0.797415 -0.603431 0.387186 -0.921185 0.0387997 0 0.469817 0.882764 -0.728363 -0.0510007 0.683291 0 -0.509045 0.86074 0.728363 -0.0510007 0.683291 0.440781 0.239475 -0.86508 0.283762 0.958895 0 0.878691 0.47739 0 0.440781 0.239475 0.86508 0.958895 -0.283762 0 -0.440781 0.239475 -0.86508 -0.878691 0.477391 0 -0.283762 0.958895 0 -0.440781 0.239475 0.86508 -0.958895 -0.283762 0 0 0.901694 -0.432374 0.422888 -0.771449 -0.475428 -0.48212 0.0410889 -0.875141 0 0.999135 0.0415818 -0.539038 -0.721575 0.434474 0.932036 -0.118211 0.342543</float_array>
+          <technique_common>
+            <accessor source="#body_0_0_Normal_array_id" count="135" stride="3">
+              <param name="X" type="float" />
+              <param name="Y" type="float" />
+              <param name="Z" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_0_0_TexCoord0_id" name="body_0_0_TexCoord0">
+          <float_array id="body_0_0_TexCoord0_array_id" count="270">0.417876 0.822336 0.346058 0.822336 0.420045 0.856235 0.34389 0.856235 0.31015 0.822336 0.305812 0.856235 0.346058 0.822336 0.34389 0.856235 0.417876 0.822336 0.420045 0.856235 0.453785 0.822336 0.458122 0.856235 0.411362 0.917139 0.352572 0.917139 0.323178 0.936891 0.352572 0.936891 0.411362 0.936891 0.440757 0.936891 0.381967 0.811471 0.856655 0.299649 0.856657 0.5678 1 0.299649 0.856656 0.081315 1.14335 0.299649 1.14334 0.081315 1.14334 0.5678 1.28669 0.299649 0.381967 0.944392 0.713313 0.299649 -0.121845 0.850933 0 0.893651 -0.0834342 0.931961 0 0.959132 0.0834343 0.931961 0.121845 0.850933 -0.121845 0.850933 -0.0834342 0.931961 -0.0380378 0.822896 0.121845 0.850933 0.0380378 0.822896 0.0834343 0.931961 0 0.959132 -0.047356 0.786482 0.0473561 0.786482 -0.047356 0.786482 0.0473561 0.786482 0 0.788628 0.0380378 0.822896 -0.0380378 0.822896 0.36982 0.761493 0.40943 0.677029 0.3671 0.782919 0.3671 0.782919 0.40943 0.677029 0.36982 0.761493 0.451737 0.759996 0.448213 0.781463 0.448213 0.781463 0.451737 0.759996 0.381967 0.945422 0.3374 0.953957 0.322689 0.956019 0.307977 0.958081 0.426535 0.953957 0.441246 0.956019 0.320014 0.952156 0.44392 0.952156 0.455957 0.958081 0.413973 0.290665 0.392562 0.295669 0.413973 0.296446 0.413973 0.313134 0.389008 0.30934 0.377093 0.30934 0.413973 0.294953 0.386483 0.306842 -0.306615 0.292849 0 0.154766 0 0.28313 0.435384 0.295669 0.306615 0.292849 0.441463 0.306842 0.450853 0.30934 0.438939 0.30934 0.37375 0.324791 0.387216 0.326403 0.381299 0.321938 0 0.468179 0.446647 0.321938 0.454196 0.324791 0.440731 0.326403 0.413973 0.338867 0.390672 0.343466 0.379139 0.343466 0.385356 0.343466 -0.344014 0.71821 0 0.71821 0.344014 0.71821 0.442591 0.343466 0.448807 0.343466 0.437275 0.343466 0.413973 0.362771 0.413973 0.358553 0.392562 0.359288 0.413973 0.360362 0.413973 0.343466 0.435384 0.359288 0.869854 0.888775 0.841206 0.901004 0.898502 0.901004 0.916207 0.868987 0.823501 0.868987 0.841206 0.83697 0.869854 0.8492 0.898502 0.83697 0.869854 0.888775 0.829149 0.868987 0.869854 0.8492 0.910558 0.868987 0.625997 0.692324 0.617501 0.707963 0.641637 0.70082 0.625997 0.692324 0.634494 0.676684 0.568943 0.692324 0.553304 0.70082 0.57744 0.707963 0.568943 0.692324 0.560447 0.676684 0.610569 0.633195 0.640387 0.642023 0.580752 0.642023 0.610569 0.548065 0.586968 0.585043 0.63417 0.585043</float_array>
+          <technique_common>
+            <accessor source="#body_0_0_TexCoord0_array_id" count="135" stride="2">
+              <param name="S" type="float" />
+              <param name="T" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="body_0_0_vtx_id">
+          <input semantic="POSITION" source="#body_0_0_Position_id" />
+          <input semantic="NORMAL" source="#body_0_0_Normal_id" />
+        </vertices>
+        <triangles material="Mdl_0_Mtl_lambert2" count="172">
+          <input semantic="VERTEX" source="#body_0_0_vtx_id" offset="0" />
+          <input semantic="TEXCOORD" source="#body_0_0_TexCoord0_id" offset="0" set="0" />
+          <p>27 15 16 27 65 15 27 16 66 27 62 65 27 66 67 27 61 62 27 67 64 27 60 61 27 64 63 27 59 60 27 63 59 15 9 16 15 65 14 15 7 9 62 61 14 62 14 65 66 17 67 66 16 17 67 17 64 60 59 13 60 13 61 61 13 14 63 64 12 63 12 59 59 12 13 64 17 12 7 8 9 7 6 8 7 5 6 14 13 5 17 11 12 9 8 11 6 5 4 6 18 8 13 12 3 13 3 5 5 3 4 11 8 10 11 2 12 11 10 2 12 2 3 18 1 0 1 4 3 1 2 0 1 3 2 2 10 0 30 31 29 30 32 31 30 29 48 30 33 32 30 48 46 30 34 33 30 46 47 30 47 34 48 44 46 47 46 45 45 46 44 84 72 73 84 85 72 84 73 86 84 92 85 84 86 94 84 93 92 84 94 93 72 69 73 72 85 71 72 70 69 72 71 70 86 73 75 73 69 75 92 93 103 92 91 85 92 103 102 92 102 91 85 91 71 93 94 103 70 68 69 70 71 83 70 79 68 70 83 79 75 69 74 68 79 74 68 74 69 102 100 91 102 103 101 102 106 100 102 101 106 94 104 103 94 105 104 101 104 106 101 103 104 71 90 83 71 91 90 91 100 90 79 81 74 79 83 82 79 82 81 105 98 104 104 98 106 100 89 90 100 106 99 100 99 89 99 98 89 99 106 98 83 89 82 83 90 89 81 82 88 88 89 98 88 82 89 108 109 107 108 115 109 108 107 111 108 116 115 108 111 116 109 110 107 109 115 118 109 118 110 111 112 116 111 113 112 115 117 118 115 116 117 116 112 117 110 114 113 110 118 114 114 112 113 114 117 112 114 118 117 129 130 131 129 134 130 129 131 133 129 132 134 129 133 132 133 131 130 133 134 132 133 130 134 37 35 36 37 36 41 37 41 40 37 40 39 37 39 42 40 38 39 42 39 43 19 20 21 19 28 20 19 21 22 19 22 28 21 23 24 21 25 23 24 23 26 26 23 25 50 51 49 50 56 51 50 49 55 50 55 56 53 54 52 53 58 54 53 52 57 53 57 58 78 76 77 78 87 76 78 77 80 78 80 87 87 96 95 87 97 96 121 119 120 121 123 119 121 120 122 121 122 123 125 126 124 125 127 126 125 124 128 125 128 127</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="body_1_0_geo_id" name="body_1_0">
+      <mesh>
+        <source id="body_1_0_Position_id" name="body_1_0_Position">
+          <float_array id="body_1_0_Position_array_id" count="21">-0.151792 0.363582 0.123547 -0.127708 0.293451 0.124531 0 0.363582 0.181814 0.151792 0.363582 0.123547 0.127708 0.293451 0.124531 -0.132946 0.463595 0.117806 0.132946 0.463595 0.117806</float_array>
+          <technique_common>
+            <accessor source="#body_1_0_Position_array_id" count="7" stride="3">
+              <param name="X" type="float" />
+              <param name="Y" type="float" />
+              <param name="Z" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_1_0_Normal_id" name="body_1_0_Normal">
+          <float_array id="body_1_0_Normal_array_id" count="21">-0.79901 -0.0705726 0.597162 -0.515355 -0.588851 0.622627 0 -0.052293 0.998632 0.79901 -0.0705727 0.597162 0.515355 -0.588851 0.622627 -0.659977 0.468985 0.586927 0.659977 0.468985 0.586927</float_array>
+          <technique_common>
+            <accessor source="#body_1_0_Normal_array_id" count="7" stride="3">
+              <param name="X" type="float" />
+              <param name="Y" type="float" />
+              <param name="Z" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_1_0_TexCoord0_id" name="body_1_0_TexCoord0">
+          <float_array id="body_1_0_TexCoord0_array_id" count="14">-0.753057 0.859089 -0.613229 0.771424 0 0.859089 0.753057 0.859089 0.613229 0.771424 -0.688027 0.984105 0.688027 0.984105</float_array>
+          <technique_common>
+            <accessor source="#body_1_0_TexCoord0_array_id" count="7" stride="2">
+              <param name="S" type="float" />
+              <param name="T" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="body_1_0_vtx_id">
+          <input semantic="POSITION" source="#body_1_0_Position_id" />
+          <input semantic="NORMAL" source="#body_1_0_Normal_id" />
+        </vertices>
+        <triangles material="Mdl_0_Mtl_TEX_ANIM_EYE" count="4">
+          <input semantic="VERTEX" source="#body_1_0_vtx_id" offset="0" />
+          <input semantic="TEXCOORD" source="#body_1_0_TexCoord0_id" offset="0" set="0" />
+          <p>0 1 2 3 2 4 0 2 5 6 2 3</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_controllers>
+    <controller id="body_0_0_ctrl_id" name="body_0_0_ctrl">
+      <skin source="#body_0_0_geo_id">
+        <bind_shape_matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</bind_shape_matrix>
+        <source id="body_0_0_ctrl_names_id" name="body_0_0_ctrl_names">
+          <Name_array id="body_0_0_ctrl_names_array_id" count="6">ROOT BODY ARM HEAD LEG TAIL</Name_array>
+          <technique_common>
+            <accessor source="#body_0_0_ctrl_names_array_id" count="6" stride="1">
+              <param name="JOINT" type="Name" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_0_0_ctrl_poses_id" name="body_0_0_ctrl_poses">
+          <float_array id="body_0_0_ctrl_poses_array_id" count="96">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.192463 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.1701666 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.2783434 0 0 1 0.00381816 0 0 0 1 1 0 0 0 0 1 0 -0.033852 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.08106399 0 0 1 0.108903 0 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#body_0_0_ctrl_poses_array_id" count="6" stride="16">
+              <param name="TRANSFORM" type="float4x4" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_0_0_ctrl_weights_id" name="body_0_0_ctrl_weights">
+          <float_array id="body_0_0_ctrl_weights_array_id" count="3">0.8 0.2 1</float_array>
+          <technique_common>
+            <accessor source="#body_0_0_ctrl_weights_array_id" count="3" stride="1">
+              <param name="WEIGHT" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <joints>
+          <input semantic="JOINT" source="#body_0_0_ctrl_names_id" />
+          <input semantic="INV_BIND_MATRIX" source="#body_0_0_ctrl_poses_id" />
+        </joints>
+        <vertex_weights count="135">
+          <input semantic="JOINT" source="#body_0_0_ctrl_names_id" offset="0" />
+          <input semantic="WEIGHT" source="#body_0_0_ctrl_weights_id" offset="1" />
+          <vcount>2 2 1 1 2 1 2 1 2 1 2 1 1 1 1 1 1 1 2 1 2 2 2 1 2 2 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</vcount>
+          <v>1 0 4 1 1 0 4 1 1 2 1 2 1 0 4 1 1 2 1 0 4 1 1 2 1 0 4 1 1 2 1 0 4 1 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 0 4 1 4 2 1 0 4 1 1 0 4 1 1 0 4 1 4 2 1 0 4 1 1 0 4 1 1 0 4 1 1 2 1 0 4 1 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 2 2 1 2 1 2 2 2 1 2 1 2 1 2 1 2 1 2 1 0 3 1 1 0 3 1 1 0 3 1 1 0 3 1 1 0 3 1 1 0 3 1 1 0 3 1 1 0 3 1 1 0 3 1 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 3 2 5 2 5 2 5 2 5 2 5 2 5 2</v>
+        </vertex_weights>
+      </skin>
+    </controller>
+    <controller id="body_1_0_ctrl_id" name="body_1_0_ctrl">
+      <skin source="#body_1_0_geo_id">
+        <bind_shape_matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</bind_shape_matrix>
+        <source id="body_1_0_ctrl_names_id" name="body_1_0_ctrl_names">
+          <Name_array id="body_1_0_ctrl_names_array_id" count="6">ROOT BODY ARM HEAD LEG TAIL</Name_array>
+          <technique_common>
+            <accessor source="#body_1_0_ctrl_names_array_id" count="6" stride="1">
+              <param name="JOINT" type="Name" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_1_0_ctrl_poses_id" name="body_1_0_ctrl_poses">
+          <float_array id="body_1_0_ctrl_poses_array_id" count="96">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.192463 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.1701666 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.2783434 0 0 1 0.00381816 0 0 0 1 1 0 0 0 0 1 0 -0.033852 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 -0.08106399 0 0 1 0.108903 0 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#body_1_0_ctrl_poses_array_id" count="6" stride="16">
+              <param name="TRANSFORM" type="float4x4" />
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="body_1_0_ctrl_weights_id" name="body_1_0_ctrl_weights">
+          <float_array id="body_1_0_ctrl_weights_array_id" count="1">1</float_array>
+          <technique_common>
+            <accessor source="#body_1_0_ctrl_weights_array_id" count="1" stride="1">
+              <param name="WEIGHT" type="float" />
+            </accessor>
+          </technique_common>
+        </source>
+        <joints>
+          <input semantic="JOINT" source="#body_1_0_ctrl_names_id" />
+          <input semantic="INV_BIND_MATRIX" source="#body_1_0_ctrl_poses_id" />
+        </joints>
+        <vertex_weights count="7">
+          <input semantic="JOINT" source="#body_1_0_ctrl_names_id" offset="0" />
+          <input semantic="WEIGHT" source="#body_1_0_ctrl_weights_id" offset="1" />
+          <vcount>1 1 1 1 1 1 1</vcount>
+          <v>3 0 3 0 3 0 3 0 3 0 3 0 3 0</v>
+        </vertex_weights>
+      </skin>
+    </controller>
+  </library_controllers>
+  <library_visual_scenes>
+    <visual_scene id="MIZYUMARU_twoleg_00_id" name="MIZYUMARU_twoleg_00">
+      <node id="ROOT_bone_id" name="ROOT" sid="ROOT" type="JOINT">
+        <translate sid="translate">0 0 0</translate>
+        <rotate sid="rotateZ">0 0 1 0</rotate>
+        <rotate sid="rotateY">0 1 0 0</rotate>
+        <rotate sid="rotateX">1 0 0 0</rotate>
+        <scale sid="scale">1 1 1</scale>
+        <node id="BODY_bone_id" name="BODY" sid="BODY" type="JOINT">
+          <translate sid="translate">0 0.192463 0</translate>
+          <rotate sid="rotateZ">0 0 1 0</rotate>
+          <rotate sid="rotateY">0 1 0 0</rotate>
+          <rotate sid="rotateX">1 0 0 0</rotate>
+          <scale sid="scale">1 1 1</scale>
+          <node id="ARM_bone_id" name="ARM" sid="ARM" type="JOINT">
+            <translate sid="translate">0 -0.0222964 0</translate>
+            <rotate sid="rotateZ">0 0 1 0</rotate>
+            <rotate sid="rotateY">0 1 0 0</rotate>
+            <rotate sid="rotateX">1 0 0 0</rotate>
+            <scale sid="scale">1 1 1</scale>
+          </node>
+          <node id="HEAD_bone_id" name="HEAD" sid="HEAD" type="JOINT">
+            <translate sid="translate">0 0.0858804 -0.00381816</translate>
+            <rotate sid="rotateZ">0 0 1 0</rotate>
+            <rotate sid="rotateY">0 1 0 0</rotate>
+            <rotate sid="rotateX">1 0 0 0</rotate>
+            <scale sid="scale">1 1 1</scale>
+          </node>
+          <node id="LEG_bone_id" name="LEG" sid="LEG" type="JOINT">
+            <translate sid="translate">0 -0.158611 0</translate>
+            <rotate sid="rotateZ">0 0 1 0</rotate>
+            <rotate sid="rotateY">0 1 0 0</rotate>
+            <rotate sid="rotateX">1 0 0 0</rotate>
+            <scale sid="scale">1 1 1</scale>
+          </node>
+          <node id="TAIL_bone_id" name="TAIL" sid="TAIL" type="JOINT">
+            <translate sid="translate">0 -0.111399 -0.108903</translate>
+            <rotate sid="rotateZ">0 0 1 0</rotate>
+            <rotate sid="rotateY">0 1 0 0</rotate>
+            <rotate sid="rotateX">1 0 0 0</rotate>
+            <scale sid="scale">1 1 1</scale>
+          </node>
+        </node>
+      </node>
+      <node id="body_0_0_node_id" name="body_0_0_node" type="NODE">
+        <matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_controller url="#body_0_0_ctrl_id">
+          <skeleton>#ROOT_bone_id</skeleton>
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Mdl_0_Mtl_lambert2" target="#lambert2_mat_id" />
+            </technique_common>
+          </bind_material>
+        </instance_controller>
+      </node>
+      <node id="body_1_0_node_id" name="body_1_0_node" type="NODE">
+        <matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_controller url="#body_1_0_ctrl_id">
+          <skeleton>#ROOT_bone_id</skeleton>
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Mdl_0_Mtl_TEX_ANIM_EYE" target="#TEX_ANIM_EYE_mat_id" />
+            </technique_common>
+          </bind_material>
+        </instance_controller>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#MIZYUMARU_twoleg_00_id" />
+  </scene>
+</COLLADA>

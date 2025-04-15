@@ -65,6 +65,7 @@ public class AttackCollision : MonoBehaviour
 					multiplier *= Attack.GetMultiplicatorType(_typeAttack, stats.Type2);
 				}
 				other.GetComponent<LifeDestroy>().Damage(_damage, multiplier);
+				ChangePokemon.instance.isAttacked = true;
 			}
 		}
 	}

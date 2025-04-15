@@ -1,0 +1,54 @@
+newmtl TEX_ANIM_EYE_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_ZENIGAME_eye.png
+newmtl back1_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_ZENIGAME_back.png
+newmtl front1_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_ZENIGAME_front.png
+newmtl mouth1_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_ZENIGAME_mouth.png
+newmtl sippo1_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_ZENIGAME_sippo.png
+newmtl skinset_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_ZENIGAME_skinset.png

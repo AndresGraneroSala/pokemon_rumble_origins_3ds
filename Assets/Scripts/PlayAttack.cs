@@ -29,7 +29,7 @@ public class PlayAttack : MonoBehaviour {
 		_playerMove = GetComponent<PlayerMove>();
 		_opponent = GetComponent<Opponent>();
 		_playerAttack = GetComponent<PlayerAttack>();
-		isPlayer = _playerAttack;
+		isPlayer = gameObject.CompareTag("Player");
 		
 		
 		target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -39,6 +39,11 @@ public class PlayAttack : MonoBehaviour {
 
 	public void InitPool(Attack attack,int posAtt=1)
 	{
+		if (!attack)
+		{
+			return;
+		}
+		
 		if (attack.Bullet==null)
 		{
 			return;
@@ -57,6 +62,15 @@ public class PlayAttack : MonoBehaviour {
 
 	public IEnumerator Play(Attack attack, int posAtt=1)
 	{
+		if (!attack)
+		{
+			yield break;
+		}
+
+		if (isPlayer&& GameManager.instance.PlayerSpeed<=0)
+		{
+			yield break;
+		}
 
 
 		if (isPlayer)

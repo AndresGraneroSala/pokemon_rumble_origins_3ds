@@ -17,4 +17,11 @@ public class PlayerStats : MonoBehaviour
 	{
 		get { return type2; }
 	}
+
+	[SerializeField] private string name;
+
+	public string Name
+	{
+		get { return name; }
+	}
 }

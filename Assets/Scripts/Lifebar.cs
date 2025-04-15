@@ -11,9 +11,9 @@ public class Lifebar : MonoBehaviour {
 	public void ChangeLife(float lifeSize)
 	{
 		green.localScale = new Vector3(lifeSize, green.localScale.y, green.localScale.z);
-		if (lifeSize<=0)
+		/*if (lifeSize<=0)
 		{
 			Destroy(gameObject);
-		}
+		}*/
 	}
 }

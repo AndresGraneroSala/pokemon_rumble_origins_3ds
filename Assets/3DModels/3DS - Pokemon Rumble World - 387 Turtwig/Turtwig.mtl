@@ -1,0 +1,45 @@
+newmtl TEX_ANIM_EYE_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_NAETORU_eye.png
+newmtl mat_arm_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_NAETORU_arm.png
+newmtl mat_atama_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_NAETORU_atama.png
+newmtl mat_kao_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_NAETORU_kao.png
+newmtl mat_koura_mat_id
+ illum 2
+ Ka 1 1 1
+ Kd 1 1 1
+ Ks 0.5 0.5 0.5
+ Ns 50
+ d 1
+ Tr 0
+ map_Kd ./Pii_NAETORU_koura.png
