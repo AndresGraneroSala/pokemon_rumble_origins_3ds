@@ -24,38 +24,48 @@ public class LifeDestroy : MonoBehaviour
 		float totalDamage = damage * multiplier;
 
 		string messsage="";
+		Color color = Color.white;
 
 		if (multiplier == 0.0f)
 		{
 			messsage = "Inmune";
+			color = new Color(0.0f, 0.0f, 0.6f); 
+
 		}
 		else if (multiplier > 0.0f && multiplier < 0.25f)
 		{
 			messsage = "Muy poco efectivo";
+			color = new Color(.6784f, 0.8471f, 0.9019f);			
 		}
 		else if (multiplier >= 0.25f && multiplier < 0.5f)
 		{
 			messsage = "Poco efectivo";
+			color = new Color(0.8f, 0.8f, 0.2f); // azul
 		}
 		else if (multiplier >= 0.5f && multiplier < 1.0f)
 		{
-			messsage = "Inmune";
+			messsage = "Normalillo";
+			color = new Color(1f, 1f, 1f); // Blanco
 		}
 		else if (multiplier >= 1.0f && multiplier < 1.5f)
 		{
-			messsage = "";
+			messsage = "Eficaz";
+			color = new Color(0.6f, 1f, 0.6f); // blanco
 		}
 		else if (multiplier >= 1.5f && multiplier < 2.0f)
 		{
-			Debug.Log("Muy efectivo");
+			messsage = "Muy efectivo";
+			color = new Color(1f, 0.275f, 0f); // Naranja
 		}
 		else
 		{
 			messsage = "Super efectivo";
+			color = new Color(1f, 0f, 0f); // Rojo brillante
 		}
-		ManagerUITextsUp.instance.SetText(messsage,transform.position-new Vector3(0,2.5f,0),Color.white);
-		ManagerUITextsUp.instance.SetText((totalDamage).ToString("0"),transform.position,Color.red);
-
+		
+		TextManager.instance.InstanceText(messsage,transform.position-new Vector3(0,2.5f,0),color);
+		TextManager.instance.InstanceText(totalDamage.ToString("0"),transform.position,color);
+		
 		if (!lifebar.isActiveAndEnabled)
 		{
 			lifebar.gameObject.SetActive(true);

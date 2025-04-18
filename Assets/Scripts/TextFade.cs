@@ -1,50 +1,40 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
 
 public class TextFade : MonoBehaviour
 {
-    [SerializeField] private float fadeDuration = 2f;
-    private Text textComponent;
-    private Color originalColor;
-    private float fadeTimer;
-    private System.Action onFadeComplete;
-    private bool isFading;
+    [SerializeField] private float fadeStart = 2f;
+    [SerializeField] private float fadeDuration = 0.5f;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
-        textComponent = GetComponent<Text>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void Run(System.Action fadeCompleteCallback)
+    private void Start()
     {
-        if (textComponent == null)
-        {
-            return;
-        }
-
-        isFading = true;
-        fadeTimer = 0f;
-        originalColor = textComponent.color;
-        onFadeComplete = fadeCompleteCallback;
+        Invoke("FadeText", fadeStart);
     }
 
-    private void FixedUpdate()
+    private void FadeText()
     {
-        if (!isFading) return;
+        StartCoroutine(FadeOut());
+    }
 
-        fadeTimer += Time.deltaTime;
-        if (fadeTimer >= fadeDuration)
+    private System.Collections.IEnumerator FadeOut()
+    {
+        float elapsed = 0f;
+        Color originalColor = spriteRenderer.color;
+
+        while (elapsed < fadeDuration)
         {
-            isFading = false;
-            if (onFadeComplete != null) // Evitar operador '?.'
-            {
-                onFadeComplete.Invoke();
-            }
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
+            spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
         }
-        else
-        {
-            float alpha = Mathf.Lerp(originalColor.a, 0, fadeTimer / fadeDuration);
-            textComponent.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-        }
+
+        Destroy(gameObject);
     }
 }

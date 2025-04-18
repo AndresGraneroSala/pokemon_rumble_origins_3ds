@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -18,10 +19,10 @@ public class PlayerStats : MonoBehaviour
 		get { return type2; }
 	}
 
-	[SerializeField] private string name;
+	[FormerlySerializedAs("name")] [SerializeField] private string playerName;
 
-	public string Name
+	public string PlayerName
 	{
-		get { return name; }
+		get { return playerName; }
 	}
 }

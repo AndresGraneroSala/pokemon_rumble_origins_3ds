@@ -122,7 +122,7 @@ public class ChangePokemon : MonoBehaviour {
 		{
 			if (i<pokemons.Count)
 			{
-				listButtons[i].GetComponentInChildren<Text>().text = pokemons[i].GetComponent<PlayerStats>().Name;
+				listButtons[i].GetComponentInChildren<Text>().text = pokemons[i].GetComponent<PlayerStats>().PlayerName;
 			}
 			else
 			{
