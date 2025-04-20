@@ -1,81 +1,69 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class AttackSprites : MonoBehaviour {
+public class AttackSprites : MonoBehaviour, IAttackPrefab
+{
+    private SpriteRenderer spriteRenderer;
 
-	private SpriteRenderer spriteRenderer;
+    public Sprite[] sprites;
+    private int currentSpriteIndex = 0;
 
-	public Sprite[] sprites;
-	private int currentSpriteIndex = 0;
-	
-	[SerializeField] private float timeBetweenSprites = 0.1f;
-	private float timer = 0;
-	[SerializeField] int repeatTimes = 1;
-	void Start()
-	{
-		// Obtener el SpriteRenderer del objeto
-		spriteRenderer = GetComponent<SpriteRenderer>();
+    [SerializeField] private float timeBetweenSprites = 0.1f;
+    private float timer = 0f;
 
-		if (sprites.Length > 0 && spriteRenderer != null)
-		{
-			// Configurar el primer sprite
-			spriteRenderer.sprite = sprites[currentSpriteIndex];
-		}
-		else
-		{
-			Debug.LogWarning("Asegúrate de asignar sprites en el inspector y que el objeto tenga un SpriteRenderer.");
-		}
-	}
+    [SerializeField] private int repeatTimes = 1;
+    private int repeatCounter;
 
 
-	private void Update()
-	{
-		timer += Time.deltaTime;
-		if (timer >= timeBetweenSprites)
-		{
-			timer = 0;
-			NextSprite();
-		}
-	}
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-	// Método para cambiar al siguiente sprite
-	public void NextSprite()
-	{
-		if (sprites.Length == 0 || spriteRenderer == null) return;
 
-		
-		// Incrementar el índice y asegurarse de que esté en rango
-		currentSpriteIndex++;
+        if (sprites.Length > 0 && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = sprites[currentSpriteIndex];
+        }
+        else
+        {
+            Debug.LogWarning("Asegúrate de asignar sprites en el inspector y que el objeto tenga un SpriteRenderer.");
+        }
+    }
 
-		if (currentSpriteIndex >= sprites.Length)
-		{
-			repeatTimes--;
-			currentSpriteIndex = 0;
-			if (repeatTimes<=0)
-			{
-				//Destroy(gameObject);
-				gameObject.SetActive(false);
-				return;
-			}
-			
-			
-		}
-		
-		// Cambiar el sprite
-		spriteRenderer.sprite = sprites[currentSpriteIndex];
-	}
+    private void Update()
+    {
+        timer += Time.deltaTime;
+        if (timer >= timeBetweenSprites)
+        {
+            timer = 0f;
+            NextSprite();
+        }
+    }
 
-	// Método para cambiar al sprite anterior
-	public void PreviousSprite()
-	{
-		if (sprites.Length == 0 || spriteRenderer == null) return;
+    private void NextSprite()
+    {
+        if (sprites.Length == 0 || spriteRenderer == null) return;
 
-		// Decrementar el índice y asegurarse de que esté en rango
-		currentSpriteIndex = (currentSpriteIndex - 1 + sprites.Length) % sprites.Length;
+        currentSpriteIndex++;
 
-		// Cambiar el sprite
-		spriteRenderer.sprite = sprites[currentSpriteIndex];
-	}
+        if (currentSpriteIndex >= sprites.Length)
+        {
+            repeatCounter--;
+            currentSpriteIndex = 0;
+
+            if (repeatCounter <= 0)
+            {
+                return;
+            }
+        }
+
+        spriteRenderer.sprite = sprites[currentSpriteIndex];
+    }
+
+    public void DoAttack(PlayAttack.MoveBulletDelegate moveCallback)
+    {
+        repeatCounter = repeatTimes;
+        currentSpriteIndex = 0;
+        
+        StartCoroutine(moveCallback(gameObject, (timeBetweenSprites*sprites.Length)*repeatTimes, 1, false));
+    }
 }

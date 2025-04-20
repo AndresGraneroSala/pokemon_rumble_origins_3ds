@@ -21,7 +21,7 @@ public class DestroyTime : MonoBehaviour {
 		_timer+=Time.deltaTime;
 		if (_timer >= destroyTime)
 		{
-			gameObject.SetActive(false);
+			//gameObject.SetActive(false);
 		}
 	}
 }

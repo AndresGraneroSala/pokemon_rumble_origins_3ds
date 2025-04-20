@@ -1,127 +1,98 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
-{
+public class PlayerMove : MonoBehaviour {
     [SerializeField] private Transform model;
-    
-    // Velocidad de movimiento del jugador
     [SerializeField] private float speed = 5.0f;
-    private bool _isMoving = false;
-
-    private RotateBone[] _bones;
-
-    // Distancia a la que se detectará el collider frente al jugador
     [SerializeField] private float detectionDistance = 1.0f;
-    // Capa de los objetos que deben ser detectados
     [SerializeField] private LayerMask obstacleLayer;
     private float _upChecker = 0.1f;
+    private RotateBone[] _bones;
+    private bool _isMoving = false;
     public bool block = false;
-    
-    private void Start()
-    {
-        _bones = GetComponentsInChildren<RotateBone>()
-            .Where(bone => !bone.IsAttack) // Filtra los que no son isAttack
-            .ToArray();
-        
+
+    void Start() {
+        RotateBone[] allBones = GetComponentsInChildren<RotateBone>();
+        _bones = new RotateBone[allBones.Length];
+        int count = 0;
+        foreach (RotateBone bone in allBones) {
+            if (!bone.IsAttack) {
+                _bones[count++] = bone;
+            }
+        }
+        System.Array.Resize(ref _bones, count);
         SetSpeed(0.25f);
     }
 
-    void Update()
-    {
-        if (block)
-        {
-            return;
-        }
-        
-        // Obtener entrada del teclado (WASD o flechas del teclado)
+    void Update() {
+        if (block) return;
+
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
         float moveVertical = Input.GetAxisRaw("Vertical");
 
-        if (UnityEngine.N3DS.GamePad.CirclePad != Vector2.zero)
-        {
+        if (UnityEngine.N3DS.GamePad.CirclePad != Vector2.zero) {
             moveHorizontal = UnityEngine.N3DS.GamePad.CirclePad.x;
             moveVertical = UnityEngine.N3DS.GamePad.CirclePad.y;
         }
 
-        // Crear un vector de movimiento
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        if (movement.magnitude > 1) movement.Normalize();
 
-        // Normalizar el vector de movimiento para mantener la velocidad constante en todas las direcciones
-        if (movement.magnitude > 1)
-        {
-            movement.Normalize();
-        }
+        bool tryingToMove = movement != Vector3.zero;
 
-        // Verificar si hay un collider frente al jugador
-        if (!IsColliderInFront())
-        {
-            // Si no hay un collider, mover al jugador
-            if (movement != Vector3.zero && !_isMoving)
-            {
+        // Solo chequea colisión si intenta moverse
+        if (tryingToMove) {
+            Vector3 forwardDirection = movement.normalized;
+            RaycastHit hit;
+            bool blocked = Physics.Raycast(model.position + Vector3.up * _upChecker, forwardDirection, out hit, detectionDistance, obstacleLayer)
+                           && hit.collider != null && !hit.collider.isTrigger;
+
+            if (!blocked) {
+                bool wasMoving = _isMoving;
                 _isMoving = true;
-                SetSpeed(1);
+
+                if (_isMoving != wasMoving) {
+                    SetSpeed(1);
+                }
+
+                transform.Translate(movement * (speed * Time.deltaTime) * GameManager.instance.PlayerSpeed, Space.World);
+
+                if (movement != Vector3.zero) {
+                    model.rotation = Quaternion.LookRotation(movement, Vector3.up);
+                }
+            } else {
+                if (_isMoving) {
+                    _isMoving = false;
+                    SetSpeed(0.25f);
+                }
             }
-            else if (movement == Vector3.zero && _isMoving)
-            {
+        } else {
+            if (_isMoving) {
                 _isMoving = false;
                 SetSpeed(0.25f);
             }
-
-            // Aplicar el movimiento al objeto del jugador
-            transform.Translate(movement * (speed * Time.deltaTime)* GameManager.instance.PlayerSpeed, Space.World);
-        }
-
-        // Hacer que el jugador gire hacia donde se está moviendo instantáneamente
-            if (movement != Vector3.zero)
-            {
-                Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
-                model.rotation = toRotation;
-            
         }
     }
 
-    public bool IsColliderInFront()
-    {
-        // Lanzamos un Raycast en la dirección en la que el jugador está mirando
-        RaycastHit hit;
+    public bool IsColliderInFront() {
         Vector3 forwardDirection = model.TransformDirection(Vector3.forward);
-
-        // Verifica si hay un objeto en frente del jugador (no se dibuja aquí)
-        if (Physics.Raycast(model.position+new Vector3(0,_upChecker,0), forwardDirection, out hit, detectionDistance, obstacleLayer))
-        {
-            // Si el objeto tiene un Collider 3D que no es Trigger, no moveremos al jugador
-            if (hit.collider != null && !hit.collider.isTrigger)
-            {
-                return true; // Hay un collider no trigger delante
-            }
+        RaycastHit hit;
+        if (Physics.Raycast(model.position + Vector3.up * _upChecker, forwardDirection, out hit, detectionDistance, obstacleLayer)) {
+            return hit.collider != null && !hit.collider.isTrigger;
         }
-        return false; // No hay ningún collider no trigger delante
+        return false;
     }
 
-    private void SetSpeed(float speed)
-    {
-        foreach (var bone in _bones)
-        {
+    private void SetSpeed(float speed) {
+        foreach (RotateBone bone in _bones) {
             bone.SetSpeedState(speed);
         }
     }
 
-    // Este método se llama en el editor para dibujar los Gizmos en la vista de la escena
-    private void OnDrawGizmos()
-    {
-        // Asegúrate de que el objeto está seleccionado y activado
-        if (enabled)
-        {
-            // Configuramos el color del Gizmo
-            Gizmos.color = Color.red;
-
-            // Dirección en la que se lanza el raycast
-            Vector3 forwardDirection = model.TransformDirection(Vector3.forward);
-
-            // Dibujamos el Gizmo en el editor (un rayo)
-            Gizmos.DrawRay(model.position+ new Vector3(0,_upChecker,0), forwardDirection * detectionDistance);
-        }
+    void OnDrawGizmos() {
+        if (!enabled) return;
+        
+        Gizmos.color = Color.red;
+        Vector3 forwardDirection = model.TransformDirection(Vector3.forward);
+        Gizmos.DrawRay(model.position + Vector3.up * _upChecker, forwardDirection * detectionDistance);
     }
 }

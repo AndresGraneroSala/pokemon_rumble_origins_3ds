@@ -6,8 +6,8 @@ using UnityEngine;
 public class AttackCollision : MonoBehaviour
 {
 
-	private float _damage = 0;
-	private bool _isPlayer = true;
+	[SerializeField] private float _damage = 0;
+	private bool _isPlayer = false;
 
 	private List<GameObject> enemiesAttacked;
 

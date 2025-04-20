@@ -30,7 +30,7 @@ public class TextManager : MonoBehaviour
 
     public void InstanceText(string text, Vector3 position,Color color)
     {
-        
+        return;
         List<Sprite> sprites = SelectSprites(text);
 
         for (int i = 0; i < sprites.Count; i++)

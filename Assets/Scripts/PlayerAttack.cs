@@ -1,63 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
-{
-	[SerializeField] RotateBone rotateBone;
+public class PlayerAttack : MonoBehaviour {
+    [SerializeField] RotateBone rotateBone;
+    [SerializeField] private Attack attack1;
+    [SerializeField] private Attack attack2;
+    [SerializeField] private Transform model;
+    [SerializeField] private Transform spawnBullets;
+    private PlayAttack _playAttack;
+    private PlayerMove _playerMove;
+    private bool isAttacking = false;
+    private float timer = 0f;
 
-	[SerializeField] private Attack attack1;
-	[SerializeField] private Attack attack2;
-	private bool isAttacking = false;
-	[SerializeField] private Transform model;
-	private float timer = 0f;
+    public float Timer { set { timer = value; } }
 
-	private PlayAttack _playAttack;
-	
-	public float Timer
-	{ 
-		set { timer = value; }
-	}
+    void Start() {
+        _playerMove = GetComponent<PlayerMove>();
+        _playAttack = GetComponent<PlayAttack>();
+        _playAttack.InitPool(attack1);
+        _playAttack.InitPool(attack2, 2);
+    }
 
-	[SerializeField] private Transform spawnBullets;
+    void Update() {
+        if (isAttacking) {
+            timer -= Time.deltaTime;
+            if (timer <= 0) {
+                isAttacking = false;
+                // Eliminar la línea que modifica _playerMove.block aquí
+            }
+            return;
+        }
 
-	private PlayerMove _playerMove;
-	// Use this for initialization
-	void Start () {
-		_playerMove = gameObject.GetComponent<PlayerMove>();
-		_playAttack = GetComponent<PlayAttack>();
-		
-		_playAttack.InitPool(attack1);
-		_playAttack.InitPool(attack2,2);
-		
-	}
-	
-	// Update is called once per frame
-	void Update()
-	{
-		if (isAttacking)
-		{
-			timer -= Time.deltaTime;
-			if (timer<=0)
-			{
-				isAttacking = false;
-				_playerMove.block = false;
-			}
-		}
-		
-		
-		if (!isAttacking && (Input.GetKeyDown(KeyCode.Mouse0) || UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.A)))
-		{
-			isAttacking = true;
-			 StartCoroutine(_playAttack.Play(attack1));
-		}
-		
-		if (!isAttacking && (Input.GetKeyDown(KeyCode.Mouse1) || UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.B)))
-		{
-			isAttacking = true;
-			StartCoroutine(_playAttack.Play(attack2,2));
-		}
+        if (Input.GetKeyDown(KeyCode.Mouse0) || UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.A)) {
+            StartAttack(attack1);
+        } else if (Input.GetKeyDown(KeyCode.Mouse1) || UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.B)) {
+            StartAttack(attack2, 2);
+        }
+    }
 
-	}
+    private void StartAttack(Attack attack, int posAtt = 1) {
+        if (!isAttacking) { // Evita ataques superpuestos
+            isAttacking = true;
+            StartCoroutine(_playAttack.Play(attack, posAtt));
+        }
+    }
 }

@@ -1,222 +1,164 @@
-﻿using System;
+﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using UnityEngine;
 
 public class PlayAttack : MonoBehaviour {
+    [SerializeField] RotateBone rotateBone;
+    [SerializeField] private Transform model;
+    [SerializeField] private Transform spawnBullets;
+    private PlayerMove _playerMove;
+    private PlayerAttack _playerAttack;
+    private Opponent _opponent;
+    private Transform target;
+    private GameObject _prefAttack1, _prefAttack2;
+    private bool isPlayer;
+    
+    void Start() {
+        _playerMove = GetComponent<PlayerMove>();
+        _opponent = GetComponent<Opponent>();
+        _playerAttack = GetComponent<PlayerAttack>();
+        isPlayer = gameObject.CompareTag("Player");
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+    }
 
-	private bool isPlayer=false;
-	
-	[SerializeField] RotateBone rotateBone;
+    public void InitPool(Attack attack, int posAtt = 1) {
+        if (!attack || attack.Bullet == null) return;
 
-	[SerializeField] private Transform model;
+        GameObject prefab = Instantiate(attack.Bullet, spawnBullets);
+        StartCoroutine(MoveBullet(prefab, 0, 0,false));
+        if (posAtt == 1) _prefAttack1 = prefab;
+        else _prefAttack2 = prefab;
+    }
 
-	[SerializeField] private Transform spawnBullets;
+    public IEnumerator Play(Attack attack, int posAtt = 1) {
+        if (!attack || (isPlayer && GameManager.instance.PlayerSpeed <= 0)) yield break;
 
-	private PlayerMove _playerMove;
+        if (isPlayer) {
+            _playerMove.block = true;
+            _playerAttack.Timer = attack.FireRate;
+        } else {
+            _opponent.IsAttacking = true;
+            _opponent.ChangeSpeedBones(0.25f);
+        }
 
-	private PlayerAttack _playerAttack;
-	
-	private Opponent _opponent;
-	
-	private Transform target;
+        rotateBone.Configure(attack.Rotate);
+        Coroutine rotateCoroutine = null;
+        if (!isPlayer) rotateCoroutine = StartCoroutine(RotateTowardsCoroutine());
 
-	private GameObject _prefAttack1, _prefAttack2;
-	
-	private void Start()
-	{
-		_playerMove = GetComponent<PlayerMove>();
-		_opponent = GetComponent<Opponent>();
-		_playerAttack = GetComponent<PlayerAttack>();
-		isPlayer = gameObject.CompareTag("Player");
-		
-		
-		target = GameObject.FindGameObjectWithTag("Player").transform;
+        yield return new WaitForSeconds(isPlayer ? attack.Delay : attack.DelayOpponent);
 
-		
-	}
+        if (rotateCoroutine != null) StopCoroutine(rotateCoroutine);
+        rotateBone.PlayAttack();
 
-	public void InitPool(Attack attack,int posAtt=1)
-	{
-		if (!attack)
-		{
-			return;
-		}
-		
-		if (attack.Bullet==null)
-		{
-			return;
-		}
-		if (posAtt==1)
-		{
-			_prefAttack1 = Instantiate(attack.Bullet, spawnBullets);
-			_prefAttack1.SetActive(false);
-		}
-		else
-		{
-			_prefAttack2 = Instantiate(attack.Bullet, spawnBullets);
-			_prefAttack2.SetActive(false);
-		}
-	}
+        if (attack.MovePlayer > 0) {
+            if (!attack.IsBulletBefore) {
+                yield return StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
+            } else {
+                StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
+            }
+        }
 
-	public IEnumerator Play(Attack attack, int posAtt=1)
-	{
-		if (!attack)
-		{
-			yield break;
-		}
+        if (!isPlayer) {
+            _opponent.IsAttacking = false;
+            _opponent.ChangeSpeedBones(1);
+        }
 
-		if (isPlayer&& GameManager.instance.PlayerSpeed<=0)
-		{
-			yield break;
-		}
+        if (attack.Bullet != null) {
+            GameObject bullet = posAtt == 1 ? _prefAttack1 : _prefAttack2;
+            StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
+            AttackCollision ac = bullet.GetComponent<AttackCollision>();
+            if (ac) ac.SetDamage(attack.Damage, attack.Type, isPlayer);
+            
+            Billboard bb = bullet.GetComponent<Billboard>();
+            if (bb) bb.SetBillboard(model.eulerAngles.y);
 
+            StartCoroutine(MoveBullet(bullet, -1, 1,true));
 
-		if (isPlayer)
-		{
-			_playerMove.block = true;
-			_playerAttack.Timer = attack.FireRate;
-		}
-		else
-		{
-			_opponent.IsAttacking = true;
-			_opponent.ChangeSpeedBones(0.25f);
-		}
+            IAttackPrefab iAttack = bullet.GetComponent<IAttackPrefab>();
+            if (iAttack==null)
+            {
+                StartCoroutine(MoveBullet(bullet, attack.MovePlayer, attack.MovePlayerSpeed,false));
+            }
+            else
+            {
+                iAttack.DoAttack(MoveBullet);
+            }
+            
+        }
+    }
+    
+    public delegate IEnumerator MoveBulletDelegate(GameObject bullet, float distance, float speed, bool enable);
 
 
-		rotateBone.Configure(attack.Rotate);
+    public IEnumerator MoveBullet(GameObject bullet, float distance, float speed, bool enable)
+    {
+        if (enable)
+        {
+            bullet.transform.position -= new Vector3(0, -1, 0); // Mover fuera de pantalla
+        }
+        else
+        {
+            if (distance > 0)
+            {
+                yield return new WaitForSeconds(distance / speed);
+            }
+            bullet.transform.position += new Vector3(0, -1, 0); // Mover fuera de pantalla
+        }
+    }
 
-		if (!isPlayer)
-		{
-			StartCoroutine(RotateTowardsCoroutine());
-		}
+    private IEnumerator MoveCoroutine(float distance, float speed) {
+        if (isPlayer) _playerMove.block = true;
 
-		if (isPlayer)
-		{
-			yield return new WaitForSeconds(attack.Delay);
-		}
-		else
-		{
-			yield return new WaitForSeconds(attack.DelayOpponent);
-		}
+        Vector3 startPosition = transform.position;
+        Vector3 direction = model.forward.normalized;
+        Vector3 targetPosition = startPosition + direction * distance;
 
-		if (!isPlayer)
-		{
-			StopCoroutine(RotateTowardsCoroutine());
-		}
+        float totalTime = distance / speed;
+        float elapsedTime = 0f;
 
-		rotateBone.PlayAttack();
+        Vector3 lastSafePosition = transform.position;
 
-		if (attack.MovePlayer > 0)
-		{
-			if (!attack.IsBulletBefore)
-			{
-				yield return StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
+        while (elapsedTime < totalTime) {
+            // Verificar colisión según el tipo
+            bool hasObstacle = (isPlayer && _playerMove.IsColliderInFront()) ||
+                               (!isPlayer && _opponent.IsColliderInAnyDirection());
 
-			}
-			else
-			{
-				StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
+            if (hasObstacle) {
+                // Si se detecta colisión, volver al último punto válido
+                transform.position = lastSafePosition;
+                break;
+            }
 
-			}
-		}
+            // Avanzar
+            float progress = (elapsedTime * speed) / distance;
+            transform.position = Vector3.Lerp(startPosition, targetPosition, progress);
 
-		
-		if (!isPlayer)
-		{
-			_opponent.IsAttacking = false;
-			_opponent.ChangeSpeedBones(1);
-		}
-		
-		
-		
-		if (attack.Bullet != null)
-		{
-			GameObject bullet = posAtt == 1 ? _prefAttack1 : _prefAttack2;
-			bullet.SetActive(true);
-			
-			bullet.GetComponent<AttackCollision>().SetDamage(attack.Damage, attack.Type, isPlayer);
-			
-			if (bullet.GetComponent<Billboard>())
-			{
-				bullet.GetComponent<Billboard>().SetBillboard(model.eulerAngles.y);
-			}
+            // Guardar posición segura
+            lastSafePosition = transform.position;
 
-			if (bullet.GetComponent<DestroyTime>())
-			{
-				bullet.GetComponent<DestroyTime>().Config(attack.MovePlayer, attack.MovePlayerSpeed);
-			}
-		}
-	}
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
 
-	private IEnumerator MoveCoroutine(float distance, float speed)
-	{
-		if (isPlayer)
-		{
-			_playerMove.block = true;
-		}
+        // Solo mover al final si NO hubo colisión
+        if (elapsedTime >= totalTime) {
+            transform.position = targetPosition;
+        }
 
-		Vector3 startPosition = transform.position; // Posición inicial del objeto
-		Vector3 targetPosition = startPosition + model.forward * distance; // Posición objetivo
+        if (isPlayer) _playerMove.block = false;
+    }
+    
+    private IEnumerator RotateTowardsCoroutine() {
+        Transform rotateTarget = _opponent.Model;
+        while (true) {
+            Vector3 direction = target.position - transform.position;
+            if (direction.magnitude < 0.01f) yield break;
 
-		float elapsedTime = 0f;
-		float journeyLength = Vector3.Distance(startPosition, targetPosition);
-
-		while (elapsedTime < journeyLength / speed)
-		{
-			if (isPlayer)
-			{
-				if (_playerMove.IsColliderInFront())
-				{
-					yield break;
-				}
-			}
-			else
-			{
-				if (_opponent.IsColliderInAnyDirection())
-				{
-					yield break;
-				}
-			}
-			
-			// Interpolar la posición
-			transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime * speed) / journeyLength);
-			elapsedTime += Time.deltaTime;
-			yield return null; // Espera un frame
-		}
-
-		// Asegurarse de llegar a la posición final
-		transform.position = targetPosition;
-
-		if (isPlayer)
-		{
-			_playerMove.block = false;
-		}
-	}
-	
-	private IEnumerator RotateTowardsCoroutine()
-	{
-		Transform rotateTarget = _opponent.Model; // Usa el modelo de rotación
-
-		while (true)
-		{
-			Vector3 direction = target.position - transform.position;
-
-			if (direction.magnitude < 0.01f)
-			{
-				yield break;
-			}
-
-			Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-			rotateTarget.rotation = Quaternion.Lerp(
-				rotateTarget.rotation,
-				targetRotation,
-				_opponent.RotationSpeedDelay * Time.deltaTime
-			);
-
-			yield return null;
-		}
-	}
+            rotateTarget.rotation = Quaternion.Lerp(
+                rotateTarget.rotation,
+                Quaternion.LookRotation(direction),
+                _opponent.RotationSpeedDelay * Time.deltaTime
+            );
+            yield return null;
+        }
+    }
 }

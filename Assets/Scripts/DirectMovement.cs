@@ -1,85 +1,55 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DirectMovement : MonoBehaviour
-{
-    private Transform target; // Objetivo al que el agente debe moverse
-    [SerializeField] private float speed = 5f, rotationSpeed=150f; // Velocidad de movimiento
-    [SerializeField] private float obstacleDetectionRange = 2f; // Distancia para detectar obstáculos
-    [SerializeField] private LayerMask obstacleLayer; // Capa de los obstáculos
+public class DirectMovement : MonoBehaviour {
+    private Transform target;
+    [SerializeField] private float speed = 5f, rotationSpeed = 150f;
+    [SerializeField] private float obstacleDetectionRange = 2f;
+    [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform modelRotation;
+    private Vector3[] _avoidDirections;
+    private bool _shouldUpdate;
 
-    public Transform ModelRotation
-    {
-        get { return modelRotation; }
-    }
-    private void Start()
-    {
+    public Transform ModelRotation { get { return modelRotation; } }
+
+    void Start() {
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        _avoidDirections = new Vector3[] {
+            Quaternion.Euler(0, -100, 0) * Vector3.forward,
+            Quaternion.Euler(0, 100, 0) * Vector3.forward
+        };
     }
 
-    void Update()
-    {
-        if (target == null)
-            return;
-    
-        Vector3 changedTarget = new Vector3(target.position.x, transform.position.y, target.position.z);
-        
-        Vector3 direction = (changedTarget - modelRotation.position).normalized;
-        direction.y = 0; // Asegurar que no haya movimiento en el eje Y
+    void Update() {
+        if (target == null) return;
 
-        // Detectar obstáculos con un Raycast
-        if (!Physics.Raycast(transform.position, direction, obstacleDetectionRange, obstacleLayer))
-        {
-            // Sin obstáculos, moverse hacia el objetivo
+        Vector3 direction = (new Vector3(target.position.x, transform.position.y, target.position.z) - modelRotation.position).normalized;
+        direction.y = 0;
+
+        if (!Physics.Raycast(transform.position, direction, obstacleDetectionRange, obstacleLayer)) {
             transform.position += direction * speed * Time.deltaTime;
-            RotateModelTowards(direction);
-
+        } else {
+            foreach (Vector3 avoidDir in _avoidDirections) {
+                if (!Physics.Raycast(transform.position, avoidDir, obstacleDetectionRange, obstacleLayer)) {
+                    transform.position += avoidDir.normalized * speed * Time.deltaTime;
+                    break;
+                }
+            }
         }
-        else
-        {
-            // Detectar un camino alternativo
-            AvoidObstacle(direction);
-            RotateModelTowards(direction);
-
-        }
+        RotateModelTowards(direction);
     }
-    
-    private void RotateModelTowards(Vector3 direction)
-    {
-        if (direction != Vector3.zero && modelRotation != null)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            modelRotation.rotation = Quaternion.RotateTowards(modelRotation.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+    private void RotateModelTowards(Vector3 direction) {
+        if (direction != Vector3.zero && modelRotation != null) {
+            modelRotation.rotation = Quaternion.RotateTowards(modelRotation.rotation, 
+                Quaternion.LookRotation(direction), rotationSpeed * Time.deltaTime);
         }
     }
 
-    private void AvoidObstacle(Vector3 direction)
-    {
-        // Intentar girar a la izquierda o a la derecha para evitar el obstáculo
-        Vector3 left = Quaternion.Euler(0, -100, 0) * direction;
-        Vector3 right = Quaternion.Euler(0, 100, 0) * direction;
-
-        if (!Physics.Raycast(transform.position, left, obstacleDetectionRange, obstacleLayer))
-        {
-            transform.position += left.normalized * speed * Time.deltaTime;
-        }
-        else if (!Physics.Raycast(transform.position, right, obstacleDetectionRange, obstacleLayer))
-        {
-            transform.position += right.normalized * speed * Time.deltaTime;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (target != null)
-        {
-            // Dibujar una línea hacia el objetivo
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, target.position);
-        }
-
-        // Dibujar el rango de detección de obstáculos
+    void OnDrawGizmos() {
+        if (target == null) return;
+        
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, target.position);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, transform.forward * obstacleDetectionRange);
     }
