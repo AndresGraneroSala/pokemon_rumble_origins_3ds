@@ -6,8 +6,9 @@ using UnityEngine.Serialization;
 
 public class Coin : MonoBehaviour {
 	private string[] tagsToDestroy = new []{"Player"};
-	private float timeToClaim=1f;
+	[SerializeField] private float timeToClaim=1f;
 	private float timer=0f;
+	[SerializeField] private int amount=1;
 	private void Start()
 	{
 		timeToClaim = CoinManager.instance.TimeToClaimCoins;
@@ -31,6 +32,7 @@ public class Coin : MonoBehaviour {
 			if (other.CompareTag(tagDesrtoy))
 			{
 				CoinManager.instance.ResetTimer();
+				CoinManager.instance.ClaimCoin(amount);
 				Destroy(gameObject);
 				break;
 			}

@@ -49,7 +49,12 @@ public class CatchPokemon : MonoBehaviour
 		gameObject.transform.localPosition = player.transform.localPosition;
 		
 		gameObject.tag = "Player";
-		
+		gameObject.layer = LayerMask.NameToLayer("Player");
+		Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+		rb.useGravity = false;
+		rb.isKinematic = true;
+		rb.constraints = RigidbodyConstraints.FreezeAll;
+
 		ChangePokemon.instance.AddPokemon(gameObject);
 		
 		gameObject.SetActive(false);

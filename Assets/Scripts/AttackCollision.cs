@@ -41,12 +41,11 @@ public class AttackCollision : MonoBehaviour
 				{
 					multiplier *= Attack.GetMultiplicatorType(_typeAttack, opponent.TypePokemon2);
 				}
-
-
-
-
+				
 				enemiesAttacked.Add(other.gameObject);
 				other.GetComponent<LifeDestroy>().Damage(_damage, multiplier);
+				
+				CoinManager.instance.ResetTimer();
 			}
 		}
 
@@ -65,7 +64,7 @@ public class AttackCollision : MonoBehaviour
 					multiplier *= Attack.GetMultiplicatorType(_typeAttack, stats.Type2);
 				}
 				other.GetComponent<LifeDestroy>().Damage(_damage, multiplier);
-				ChangePokemon.instance.isAttacked = true;
+				ChangePokemon.instance.IsAttacked = true;
 			}
 		}
 	}

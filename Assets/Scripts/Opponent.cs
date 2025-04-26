@@ -21,7 +21,6 @@ public class Opponent : MonoBehaviour {
     public bool IsAttacking { get { return _isAttacking; } set { _isAttacking = value; } }
     public Attack.TypeAttack TypePokemon1 { get { return typePokemon1; } }
     public Attack.TypeAttack TypePokemon2 { get { return typePokemon2; } }
-    public Transform Model { get { return _directMovement.ModelRotation; } }
     private float _raycastCooldown = 0.2f;
 
     [SerializeField] private bool randomize = true;
@@ -35,6 +34,7 @@ public class Opponent : MonoBehaviour {
     private float _timerAttack;
     
     void Start() {
+        
         _playAttack = GetComponent<PlayAttack>();
         target = GameObject.FindGameObjectWithTag("Player").transform;
         RotateBone[] allBones = GetComponentsInChildren<RotateBone>();
@@ -56,11 +56,17 @@ public class Opponent : MonoBehaviour {
         }
     }
 
-    void Update()
+    public void ChangeTarget(Transform newTarget)
+    {
+        target = newTarget;
+        _playAttack.ChangeTarget(newTarget);
+    }
+    
+    public void Update()
     {
         if (_isAttacking) return;
 
-        _distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        _distanceToPlayer = ((transform.position - target.position).sqrMagnitude)/4;
 
         if (_distanceToPlayer <= distanceToMove)
         {
@@ -85,7 +91,7 @@ public class Opponent : MonoBehaviour {
                 _timerMove = 0;
                 _timerAttack = 0;
                 
-                StartCoroutine(_playAttack.Play(attack, 1));
+                StartCoroutine(_playAttack.Play(attack, 1,_delayAttack));
             }
         }
         else
@@ -119,6 +125,7 @@ public class Opponent : MonoBehaviour {
         return false;
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos() {
         if (!enabled) return;
         
@@ -128,4 +135,6 @@ public class Opponent : MonoBehaviour {
             Gizmos.DrawRay(transform.position + Vector3.up * _upChecker, transform.TransformDirection(direction) * detectionDistance);
         }
     }
+#endif
+    
 }

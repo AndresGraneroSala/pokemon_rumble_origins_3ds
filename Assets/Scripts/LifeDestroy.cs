@@ -63,8 +63,8 @@ public class LifeDestroy : MonoBehaviour
 			color = new Color(1f, 0f, 0f); // Rojo brillante
 		}
 		
-		TextManager.instance.InstanceText(messsage,transform.position-new Vector3(0,2.5f,0),color);
-		TextManager.instance.InstanceText(totalDamage.ToString("0"),transform.position,color);
+		//TextManager.instance.InstanceText(messsage,transform.position-new Vector3(0,2.5f,0),color);
+		//TextManager.instance.InstanceText(totalDamage.ToString("0"),transform.position,color);
 		
 		if (!lifebar.isActiveAndEnabled)
 		{

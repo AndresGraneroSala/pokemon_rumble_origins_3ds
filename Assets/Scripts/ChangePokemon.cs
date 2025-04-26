@@ -16,6 +16,17 @@ public class ChangePokemon : MonoBehaviour {
 	public static ChangePokemon instance;
 	public bool isAttacked,isChanging;
 
+	public bool IsAttacked
+	{
+		set
+		{
+			if (isChanging)
+			{
+				isAttacked = value;
+			}
+		}
+	}
+
 	[SerializeField] private GameObject key;
 	
 	private void Awake()
@@ -108,6 +119,8 @@ public class ChangePokemon : MonoBehaviour {
 		camera.transform.SetParent(pokemons[pokemonIndex].transform);
 		_currentIndex = pokemonIndex;
 		GameManager.instance.MovePlayer();
+		
+		EnemyManager.Instance.ChangeTarget(pokemons[pokemonIndex].transform);
 
 	}
 
@@ -116,12 +129,19 @@ public class ChangePokemon : MonoBehaviour {
 
 	private void ShowListSelect()
 	{
-		GameManager.instance.PauseGame();
+		if (Time.timeScale == 0)
+		{
+			return;
+		}
+		
+		print(pokemons.Count);
 		listSelect.SetActive(true);
 		for (int i = 0; i < listButtons.Length; i++)
 		{
-			if (i<pokemons.Count)
+			
+			if (i<=pokemons.Count-1)
 			{
+				listButtons[i].gameObject.SetActive(true);
 				listButtons[i].GetComponentInChildren<Text>().text = pokemons[i].GetComponent<PlayerStats>().PlayerName;
 			}
 			else
@@ -129,5 +149,6 @@ public class ChangePokemon : MonoBehaviour {
 				listButtons[i].gameObject.SetActive(false);
 			}
 		}
+		GameManager.instance.PauseGame();
 	}
 }

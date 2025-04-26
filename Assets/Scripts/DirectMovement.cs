@@ -4,33 +4,47 @@ public class DirectMovement : MonoBehaviour {
     private Transform target;
     [SerializeField] private float speed = 5f, rotationSpeed = 150f;
     [SerializeField] private float obstacleDetectionRange = 2f;
-    [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform modelRotation;
+    [SerializeField] private float separationRadius = 1.5f;
     private Vector3[] _avoidDirections;
-    private bool _shouldUpdate;
-
-    public Transform ModelRotation { get { return modelRotation; } }
-
+    
     void Start() {
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        EnemyManager.Instance.RegisterEnemy(this);
+        
         _avoidDirections = new Vector3[] {
             Quaternion.Euler(0, -100, 0) * Vector3.forward,
             Quaternion.Euler(0, 100, 0) * Vector3.forward
         };
     }
 
+    public void ChangeTarget(Transform newTarget)
+    {
+        target = newTarget;
+        GetComponent<Opponent>().ChangeTarget(newTarget);
+    }
+
+    void OnDestroy() {
+        EnemyManager.Instance.UnregisterEnemy(this);
+    }
+
     void Update() {
         if (target == null) return;
 
-        Vector3 direction = (new Vector3(target.position.x, transform.position.y, target.position.z) - modelRotation.position).normalized;
+        Vector3 targetPosFlat = new Vector3(target.position.x, transform.position.y, target.position.z);
+        Vector3 direction = (targetPosFlat - modelRotation.position).normalized; // Usar posición del modelo
+        direction += EnemyManager.Instance.GetSeparationForce(this, separationRadius) * 0.3f;
         direction.y = 0;
 
-        if (!Physics.Raycast(transform.position, direction, obstacleDetectionRange, obstacleLayer)) {
-            transform.position += direction * speed * Time.deltaTime;
+        // Usar modelRotation.forward para el rayo y direcciones de evasión
+        if (!EnemyManager.Instance.CheckPath(modelRotation.position, modelRotation.forward, obstacleDetectionRange)) {
+            transform.position += direction.normalized * speed * Time.deltaTime;
         } else {
             foreach (Vector3 avoidDir in _avoidDirections) {
-                if (!Physics.Raycast(transform.position, avoidDir, obstacleDetectionRange, obstacleLayer)) {
-                    transform.position += avoidDir.normalized * speed * Time.deltaTime;
+                Vector3 rotatedAvoidDir = modelRotation.TransformDirection(avoidDir); // Aplicar rotación del modelo
+                if (!EnemyManager.Instance.CheckPath(modelRotation.position, rotatedAvoidDir, obstacleDetectionRange)) {
+                    transform.position += rotatedAvoidDir.normalized * speed * Time.deltaTime;
+                    direction = rotatedAvoidDir;
                     break;
                 }
             }
@@ -40,17 +54,11 @@ public class DirectMovement : MonoBehaviour {
 
     private void RotateModelTowards(Vector3 direction) {
         if (direction != Vector3.zero && modelRotation != null) {
-            modelRotation.rotation = Quaternion.RotateTowards(modelRotation.rotation, 
-                Quaternion.LookRotation(direction), rotationSpeed * Time.deltaTime);
+            modelRotation.rotation = Quaternion.RotateTowards(
+                modelRotation.rotation, 
+                Quaternion.LookRotation(direction), 
+                rotationSpeed * Time.deltaTime
+            );
         }
-    }
-
-    void OnDrawGizmos() {
-        if (target == null) return;
-        
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, target.position);
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, transform.forward * obstacleDetectionRange);
     }
 }
