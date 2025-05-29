@@ -59,7 +59,7 @@ public class CatchPokemon : MonoBehaviour
 		rb.isKinematic = true;
 		rb.constraints = RigidbodyConstraints.FreezeAll;
 
-		ChangePokemon.instance.ShowCatchOptions(gameObject);
+		ChangePokemon.instance.EnqueuePokemon(gameObject);
 		
 		gameObject.SetActive(false);
 	}

@@ -58,22 +58,21 @@ public class ChangePokemon : MonoBehaviour {
 		optionCatch.SetActive(false);
 	}
 
-	private PlayerStats tempStats;
-	public void ShowCatchOptions(GameObject pokemon, bool queue=false)
+	public void EnqueuePokemon(GameObject pokemon)
 	{
-		if (!queue)
-		{
-			bool isFirst = ! (_queuePokemons.Count > 0);
-			_queuePokemons.Enqueue(pokemon);
+		_queuePokemons.Enqueue(pokemon);
+	}
+	
+	private PlayerStats tempStats;
 
-			if (!isFirst)
-			{
-				return;
-			}
-			
-		}
-
-		
+	private void OMGnewPokemon()
+	{
+		isDeleting = true;
+		ShowCatchOptions(_queuePokemons.Peek());
+	}
+	
+	public void ShowCatchOptions(GameObject pokemon)
+	{
 		GameManager.instance.PauseGame();
 		optionCatch.SetActive(true);
 		tempStats = pokemon.GetComponent<PlayerStats>();
@@ -130,7 +129,7 @@ public class ChangePokemon : MonoBehaviour {
 	{
 		if (_queuePokemons.Count > 0)
 		{
-			ShowCatchOptions(_queuePokemons.Peek(),true);
+			ShowCatchOptions(_queuePokemons.Peek());
 		}
 	}
 
@@ -248,26 +247,33 @@ public class ChangePokemon : MonoBehaviour {
 	}
 
 
-	
 
-	private void ShowListSelect(bool update=false)
+
+	private void ShowListSelect(bool update = false)
 	{
+
 		if (Time.timeScale == 0 && !update)
 		{
+			return;
+		}
+
+		if (_queuePokemons.Count > 0 && !isDeleting)
+		{
+			OMGnewPokemon();
 			return;
 		}
 		
 		listSelect.SetActive(true);
 		for (int i = 0; i < listButtons.Length; i++)
 		{
-			
-			if (i<=pokemons.Count-1)
+
+			if (i <= pokemons.Count - 1)
 			{
 				listButtons[i].gameObject.SetActive(true);
 				PlayerStats playerStats = pokemons[i].GetComponent<PlayerStats>();
-				listButtons[i].GetComponentInChildren<Text>().text = playerStats.PlayerName+"---"+playerStats.CP;
+				listButtons[i].GetComponentInChildren<Text>().text = playerStats.PlayerName + "---" + playerStats.CP;
 
-				if (i==_currentIndex)
+				if (i == _currentIndex)
 				{
 					listButtons[i].transform.Find("bin").gameObject.SetActive(false);
 				}
@@ -275,13 +281,14 @@ public class ChangePokemon : MonoBehaviour {
 				{
 					listButtons[i].transform.Find("bin").gameObject.SetActive(true);
 				}
-				
+
 			}
 			else
 			{
 				listButtons[i].gameObject.SetActive(false);
 			}
 		}
+
 		GameManager.instance.PauseGame();
 	}
 
