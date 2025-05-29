@@ -1,21 +1,32 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ChangePokemon : MonoBehaviour {
 
+	[SerializeField] private int maxPokemon=6;
 	[SerializeField] private float timeToChange;
 	public List<GameObject> pokemons = new List<GameObject>();
 	private new GameObject camera;
 	private int _currentIndex = 0,indexToChange = 0;
 
-	[SerializeField] private GameObject listSelect;
+	[SerializeField] private GameObject listSelect,optionCatch;
 	private Button[] listButtons;
 	public static ChangePokemon instance;
 	public bool isAttacked,isChanging;
 
+	[SerializeField] private Button yes, no;
+	[FormerlySerializedAs("del")] [SerializeField] private Button delOption;
+	[SerializeField] private Text infoCathed;
+	[SerializeField] private GameObject key;
+
+	private Queue<GameObject> _queuePokemons = new Queue<GameObject>();
+	
+	private bool isDeleting = false;
 	public bool IsAttacked
 	{
 		set
@@ -27,7 +38,6 @@ public class ChangePokemon : MonoBehaviour {
 		}
 	}
 
-	[SerializeField] private GameObject key;
 	
 	private void Awake()
 	{
@@ -35,28 +45,111 @@ public class ChangePokemon : MonoBehaviour {
 
 	}
 
-	public void AddPokemon(GameObject pokemon)
-	{
-		pokemons.Add(pokemon);
-	}
-
 	// Use this for initialization
 	void Start () {
-		
 		camera = GetComponentInChildren<Camera>().gameObject;
 		
 		listButtons = listSelect.GetComponentsInChildren<Button>();
+		
+		ButtonsToChange();
+		
+		Change(0);
+		
+		optionCatch.SetActive(false);
+	}
 
+	private PlayerStats tempStats;
+	public void ShowCatchOptions(GameObject pokemon, bool queue=false)
+	{
+		if (!queue)
+		{
+			bool isFirst = ! (_queuePokemons.Count > 0);
+			_queuePokemons.Enqueue(pokemon);
+
+			if (!isFirst)
+			{
+				return;
+			}
+			
+		}
+
+		
+		GameManager.instance.PauseGame();
+		optionCatch.SetActive(true);
+		tempStats = pokemon.GetComponent<PlayerStats>();
+		infoCathed.text = "You've captured " + tempStats.PlayerName + ". Would you like to keep it?";
+		
+		yes.onClick.RemoveAllListeners();
+		no.onClick.RemoveAllListeners();
+		delOption.onClick.RemoveAllListeners();
+		
+		yes.onClick.AddListener(delegate { AddPokemon(pokemon); });
+		no.onClick.AddListener(delegate { NoPokemon(pokemon); });
+		delOption.onClick.AddListener(delegate { DelPokemon(pokemon); });
+	}
+	
+	public void AddPokemon(GameObject pokemon)
+	{
+		if (pokemons.Count >= maxPokemon)
+		{
+			infoCathed.text = "You can only have up to 6 Pokémon. Please choose another option for " + tempStats.PlayerName + ".";
+			return;
+		}
+		
+		pokemons.Add(pokemon);
+		
+		optionCatch.SetActive(false);
+		GameManager.instance.ResumeGame();
+		
+		_queuePokemons.Dequeue();
+		CheckPokemonQueue();
+	}
+	
+	public void NoPokemon(GameObject pokemon)
+	{
+		Destroy(pokemon);
+		optionCatch.SetActive(false);
+		GameManager.instance.ResumeGame();
+		_queuePokemons.Dequeue();
+		CheckPokemonQueue();
+	}
+	
+	public void DelPokemon(GameObject pokemon)
+	{
+		if (pokemons.Count==1)
+		{
+			infoCathed.text = "Only one left. Can't remove more.";
+			return;
+		}
+		
+		isDeleting = true;
+		ShowListSelect(true);
+	}
+
+	private void CheckPokemonQueue()
+	{
+		if (_queuePokemons.Count > 0)
+		{
+			ShowCatchOptions(_queuePokemons.Peek(),true);
+		}
+	}
+
+	private void ButtonsToChange()
+	{
 		for (int i = 0; i < listButtons.Length; i++)
 		{
 			var i1 = i;
+			listButtons[i].onClick.RemoveAllListeners();
 			listButtons[i].onClick.AddListener(delegate { ChangeIndex(i1); });
+			
+			Button tmpButton = listButtons[i].GetComponentsInChildren<Button>(true)[1];
+			tmpButton.gameObject.SetActive(true);
+			tmpButton.onClick.AddListener(delegate { RemovePokemon(i1); });
+
 		}
 		listSelect.SetActive(false);
-		
-		Change(0);
-
 	}
+	
 	private float timer = 0;
 	// Update is called once per frame
 	void Update () {
@@ -95,6 +188,17 @@ public class ChangePokemon : MonoBehaviour {
 
 	private void ChangeIndex(int index)
 	{
+		if (isDeleting)
+		{
+			return;
+		}
+		
+		if (index == _currentIndex)
+		{
+			CloseListSelect();
+			return;
+		}
+
 		indexToChange = index;
 		isChanging = true;
 		GameManager.instance.ResumeGame();
@@ -104,8 +208,27 @@ public class ChangePokemon : MonoBehaviour {
 
 		key.SetActive(true);
 		key.transform.position = new Vector3(pokemons[_currentIndex].transform.position.x,key.transform.position.y ,pokemons[_currentIndex].transform.position.z);
+	}
 
+	private void RemovePokemon(int index)
+	{
+		pokemons.RemoveAt(index);
 
+		if (_currentIndex > index)
+		{
+			_currentIndex--;
+		}
+
+		if (isDeleting)
+		{
+			isDeleting = false;
+			listSelect.SetActive(false);
+		}
+		else
+		{
+			ShowListSelect(true);
+		}
+		
 	}
 	
 	
@@ -127,14 +250,13 @@ public class ChangePokemon : MonoBehaviour {
 
 	
 
-	private void ShowListSelect()
+	private void ShowListSelect(bool update=false)
 	{
-		if (Time.timeScale == 0)
+		if (Time.timeScale == 0 && !update)
 		{
 			return;
 		}
 		
-		print(pokemons.Count);
 		listSelect.SetActive(true);
 		for (int i = 0; i < listButtons.Length; i++)
 		{
@@ -142,7 +264,18 @@ public class ChangePokemon : MonoBehaviour {
 			if (i<=pokemons.Count-1)
 			{
 				listButtons[i].gameObject.SetActive(true);
-				listButtons[i].GetComponentInChildren<Text>().text = pokemons[i].GetComponent<PlayerStats>().PlayerName;
+				PlayerStats playerStats = pokemons[i].GetComponent<PlayerStats>();
+				listButtons[i].GetComponentInChildren<Text>().text = playerStats.PlayerName+"---"+playerStats.CP;
+
+				if (i==_currentIndex)
+				{
+					listButtons[i].transform.Find("bin").gameObject.SetActive(false);
+				}
+				else
+				{
+					listButtons[i].transform.Find("bin").gameObject.SetActive(true);
+				}
+				
 			}
 			else
 			{
@@ -150,5 +283,12 @@ public class ChangePokemon : MonoBehaviour {
 			}
 		}
 		GameManager.instance.PauseGame();
+	}
+
+	[ContextMenu("Close")]
+	private void CloseListSelect()
+	{
+		listSelect.SetActive(false);
+		GameManager.instance.ResumeGame();
 	}
 }

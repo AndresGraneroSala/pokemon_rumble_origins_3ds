@@ -9,6 +9,8 @@ public class CatchPokemon : MonoBehaviour
 
 	[SerializeField] private MonoBehaviour[] enemyScripts;
 	[SerializeField] private MonoBehaviour[] playerScripts;
+	
+	[Range(0f, 1f)]
 	[SerializeField] private float accuracy;
 
 	private void Awake()
@@ -27,9 +29,11 @@ public class CatchPokemon : MonoBehaviour
 
 	public void ChangeToPlayer()
 	{
-		float random = Random.Range(0f, 100f);
+		float random = Random.value;
+		
 		if (random > accuracy)
 		{
+			Destroy(gameObject);
 			return;
 		}
 		
@@ -55,7 +59,7 @@ public class CatchPokemon : MonoBehaviour
 		rb.isKinematic = true;
 		rb.constraints = RigidbodyConstraints.FreezeAll;
 
-		ChangePokemon.instance.AddPokemon(gameObject);
+		ChangePokemon.instance.ShowCatchOptions(gameObject);
 		
 		gameObject.SetActive(false);
 	}

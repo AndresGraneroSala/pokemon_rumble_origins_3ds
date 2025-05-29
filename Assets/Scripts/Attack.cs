@@ -121,7 +121,7 @@ public class Attack: ScriptableObject
 				switch (attack)
 				{
 					case TypeAttack.Fighting: return 2;
-					case TypeAttack.Ghost: return 0;
+					case TypeAttack.Ghost: return 0.1f;
 				}
 
 				break;
@@ -144,7 +144,7 @@ public class Attack: ScriptableObject
 				switch (attack)
 				{
 					case TypeAttack.Fighting: return 0.5f;
-					case TypeAttack.Ground: return 0;
+					case TypeAttack.Ground: return 0.1f;
 					case TypeAttack.Rock: return 2;
 					case TypeAttack.Bug: return 0.5f;
 					case TypeAttack.Grass: return 0.5f;
@@ -176,7 +176,7 @@ public class Attack: ScriptableObject
 					case TypeAttack.Rock: return 0.5f;
 					case TypeAttack.Water: return 2;
 					case TypeAttack.Grass: return 2;
-					case TypeAttack.Electric: return 0;
+					case TypeAttack.Electric: return 0.1f;
 					case TypeAttack.Ice: return 2;
 					default: return 1;
 
@@ -212,8 +212,8 @@ public class Attack: ScriptableObject
 			case TypeAttack.Ghost:
 				switch (attack)
 				{
-					case TypeAttack.Normal: return 0;
-					case TypeAttack.Fighting: return 0;
+					case TypeAttack.Normal: return 0.1f;
+					case TypeAttack.Fighting: return 0.1f;
 					case TypeAttack.Poison: return 0.5f;
 					case TypeAttack.Bug: return 0.5f;
 					case TypeAttack.Ghost: return 2;
@@ -227,7 +227,7 @@ public class Attack: ScriptableObject
 					case TypeAttack.Normal: return 0.5f;
 					case TypeAttack.Fighting: return 2;
 					case TypeAttack.Flying: return 0.5f;
-					case TypeAttack.Poison: return 0;
+					case TypeAttack.Poison: return 0.1f;
 					case TypeAttack.Ground: return 2;
 					case TypeAttack.Rock: return 0.5f;
 					case TypeAttack.Bug: return 0.5f;
@@ -336,7 +336,7 @@ public class Attack: ScriptableObject
 					case TypeAttack.Fighting: return 2;
 					case TypeAttack.Bug: return 2;
 					case TypeAttack.Ghost: return 0.5f;
-					case TypeAttack.Psychic: return 0;
+					case TypeAttack.Psychic: return 0.1f;
 					case TypeAttack.Dark: return 0.5f;
 					case TypeAttack.Fairy: return 2;
 					default: return 1;
@@ -349,7 +349,7 @@ public class Attack: ScriptableObject
 					case TypeAttack.Poison: return 2;
 					case TypeAttack.Bug: return 0.5f;
 					case TypeAttack.Steel: return 2;
-					case TypeAttack.Dragon: return 0;
+					case TypeAttack.Dragon: return 0.1f;
 					case TypeAttack.Dark: return 0.5f;
 					default: return 1;
 				}

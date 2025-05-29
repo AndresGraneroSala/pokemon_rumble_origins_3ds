@@ -10,6 +10,7 @@ public class PlayAttack : MonoBehaviour
     private PlayerMove _playerMove;
     private PlayerAttack _playerAttack;
     private Opponent _opponent;
+    private PlayerStats _playerStats;
     private Transform target;
     private GameObject _prefAttack1, _prefAttack2;
     private bool isPlayer;
@@ -25,6 +26,10 @@ public class PlayAttack : MonoBehaviour
         if (!isPlayer)
         {
             hitDetector.sortingOrder = -19;
+        }
+        else
+        {
+            _playerStats = GetComponent<PlayerStats>();
         }
     }
 
@@ -99,8 +104,19 @@ public class PlayAttack : MonoBehaviour
         {
             GameObject bullet = posAtt == 1 ? _prefAttack1 : _prefAttack2;
             StartCoroutine(MoveCoroutine(attack.MovePlayer, attack.MovePlayerSpeed));
+
+            int cpDamage = 0;
+            if (isPlayer)
+            {
+                cpDamage = _playerStats.CP / 100;
+            }
+            else
+            {
+                cpDamage = _opponent.CP / 100;
+            }
+
             AttackCollision ac = bullet.GetComponent<AttackCollision>();
-            if (ac) ac.SetDamage(attack.Damage, attack.Type, isPlayer);
+            if (ac) ac.SetDamage(attack.Damage*cpDamage, attack.Type, isPlayer);
 
             Billboard bb = bullet.GetComponent<Billboard>();
             if (bb) bb.SetBillboard(model.eulerAngles.y);

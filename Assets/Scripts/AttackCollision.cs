@@ -20,7 +20,7 @@ public class AttackCollision : MonoBehaviour
 
 	public void SetDamage(float damage, Attack.TypeAttack type, bool isPlayer)
 	{
-		enemiesAttacked = new List<GameObject>();
+		enemiesAttacked.Clear();
 		_isPlayer = isPlayer;
 		_typeAttack = type;
 

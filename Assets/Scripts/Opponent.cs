@@ -27,6 +27,13 @@ public class Opponent : MonoBehaviour {
     [SerializeField] private float randomDelayAttack=0.5f;
     [SerializeField] private float randomDelayMove=0.5f;
 
+    [SerializeField] private int cp=100;
+
+    public int CP
+    {
+        get { return cp; }
+    }
+    
     private float _delayMove = 0;
     private float _delayAttack = 0;
     

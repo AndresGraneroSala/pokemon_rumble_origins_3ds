@@ -25,4 +25,11 @@ public class PlayerStats : MonoBehaviour
 	{
 		get { return playerName; }
 	}
+
+	[SerializeField] private int cp=100;
+
+	public int CP
+	{
+		get { return cp; }
+	}
 }
