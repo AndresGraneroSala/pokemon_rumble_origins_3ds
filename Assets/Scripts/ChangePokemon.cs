@@ -67,7 +67,6 @@ public class ChangePokemon : MonoBehaviour {
 
 	private void OMGnewPokemon()
 	{
-		isDeleting = true;
 		ShowCatchOptions(_queuePokemons.Peek());
 	}
 	
@@ -131,6 +130,10 @@ public class ChangePokemon : MonoBehaviour {
 		{
 			ShowCatchOptions(_queuePokemons.Peek());
 		}
+		else
+		{
+			ShowListSelect();
+		}
 	}
 
 	private void ButtonsToChange()
@@ -177,7 +180,7 @@ public class ChangePokemon : MonoBehaviour {
 		}
 		
 
-		if (Input.GetKey(KeyCode.E)|| UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.X))
+		if (Input.GetKeyDown(KeyCode.E)|| UnityEngine.N3DS.GamePad.GetButtonTrigger(N3dsButton.X))
 		{
 			//GameManager.instance.PauseGame();
 			ShowListSelect();
@@ -221,7 +224,7 @@ public class ChangePokemon : MonoBehaviour {
 		if (isDeleting)
 		{
 			isDeleting = false;
-			listSelect.SetActive(false);
+			CloseListSelect();
 		}
 		else
 		{
@@ -251,9 +254,12 @@ public class ChangePokemon : MonoBehaviour {
 
 	private void ShowListSelect(bool update = false)
 	{
-
 		if (Time.timeScale == 0 && !update)
 		{
+			if (_queuePokemons.Count <= 0)
+			{
+				CloseListSelect();
+			}
 			return;
 		}
 
@@ -292,7 +298,6 @@ public class ChangePokemon : MonoBehaviour {
 		GameManager.instance.PauseGame();
 	}
 
-	[ContextMenu("Close")]
 	private void CloseListSelect()
 	{
 		listSelect.SetActive(false);
