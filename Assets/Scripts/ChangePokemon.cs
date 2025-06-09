@@ -73,6 +73,7 @@ public class ChangePokemon : MonoBehaviour {
 	public void ShowCatchOptions(GameObject pokemon)
 	{
 		GameManager.instance.PauseGame();
+		optionCatch.SetActive(false);
 		optionCatch.SetActive(true);
 		tempStats = pokemon.GetComponent<PlayerStats>();
 		infoCathed.text = "You've captured " + tempStats.PlayerName + ". Would you like to keep it?";
