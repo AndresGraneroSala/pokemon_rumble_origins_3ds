@@ -225,6 +225,7 @@ public class ChangePokemon : MonoBehaviour {
 		{
 			isDeleting = false;
 			CloseListSelect();
+			CheckPokemonQueue();
 		}
 		else
 		{
