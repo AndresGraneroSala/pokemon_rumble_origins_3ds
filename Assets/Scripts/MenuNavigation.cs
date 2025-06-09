@@ -155,8 +155,6 @@ public class MenuNavigation : MonoBehaviour
             {
                 selectable.OnSelect(null);
             }
-
-            print("entra " + button.name);
         }
     }
 
@@ -174,7 +172,6 @@ public class MenuNavigation : MonoBehaviour
             }
             while (tempStack.Count > 0)
                 firstButtonStack.Push(tempStack.Pop());
-            print("sale "+button.name);
         }
     }
 }
